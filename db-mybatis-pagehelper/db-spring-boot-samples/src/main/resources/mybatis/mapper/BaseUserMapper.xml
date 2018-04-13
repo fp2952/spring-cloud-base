@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.peng.db.spring.boot.samples.mapper.mapper.BaseUserMapper">
+  <resultMap id="BaseResultMap" type="com.peng.db.spring.boot.samples.mapper.model.BaseUser">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+    <result column="PHONE" jdbcType="VARCHAR" property="phone" />
+    <result column="GENDER" jdbcType="VARCHAR" property="gender" />
+    <result column="AGE" jdbcType="INTEGER" property="age" />
+    <result column="ACTIVE" jdbcType="INTEGER" property="active" />
+    <result column="CREATE_DATE" jdbcType="DATE" property="createDate" />
+    <result column="UPDATE_DATE" jdbcType="DATE" property="updateDate" />
+  </resultMap>
+</mapper>

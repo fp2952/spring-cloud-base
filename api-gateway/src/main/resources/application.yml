@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    consul:
+      host: 127.0.0.1
+      port: 8500
+      discovery:
+        prefer-ip-address: true
+  application:
+    name: api-gateway
+server:
+  port: 21000
+zuul:
+  routes:
+    main-data:
+      path: /main-data/api/**
+      serviceId: main-data

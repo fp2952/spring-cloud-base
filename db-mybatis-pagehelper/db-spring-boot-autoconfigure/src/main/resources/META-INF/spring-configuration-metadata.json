@@ -1,0 +1,237 @@
+{
+  "properties": [
+    {
+      "name": "mapper.uuid",
+      "description": "生成 uuid 的方法.",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "mapper.before",
+      "description": "selectKey 的 order 属性.",
+      "type": "java.lang.Boolean",
+      "defaultValue": false
+    },
+    {
+      "name": "mapper.catalog",
+      "description": "数据库的 catalog.",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "mapper.schema",
+      "description": "数据库的 schema.",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "mapper.not-empty",
+      "description": "insert 和 update中，是否判断字符串类型 !=''，少数方法会用到.",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "mapper.enable-method-annotation",
+      "description": "可以控制是否支持方法上的JPA注解，默认 false.",
+      "type": "java.lang.Boolean",
+      "defaultValue": false
+    },
+    {
+      "name": "mapper.identity",
+      "description": "主键生成策略.",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "mapper.seq-format",
+      "description": "序列的获取规则,使用 {num 格式化参数，默认值为 {0}.nextval，针对 Oracle，可选参数一共 4 个，对应 0,1,2,3 分别为 SequenceName，ColumnName, PropertyName，TableName.",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "mapper.style",
+      "description": "实体和表转换时的规则，默认驼峰转下划线.",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "pagehelper.properties",
+      "description": "参数实体.",
+      "type": "java.util.Map<String, String>"
+    },
+    {
+      "name": "pagehelper.auto-dialect",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "pagehelper.auto-runtime-dialect",
+      "description": "允许在运行时根据多数据源自动识别对应方言的分页 （不支持自动选择 sqlserver2012，只能使用 sqlserver ）",
+      "type": "java.lang.String",
+      "defaultValue": false
+    },
+    {
+      "name": "pagehelper.close-conn",
+      "description": "当使用运行时动态数据源或没有设置 helperDialect 属性自动获取数据库类型时，会自动获取一个数据库连接， 通过该属性来设置是否关闭获取的这个连接，默认true关闭，设置为 false 后，不会关闭获取的连接，这个参数的设置要根据自己选择的数据源来决定",
+      "type": "java.lang.String",
+      "defaultValue": true
+    },
+    {
+      "name": "pagehelper.dialect",
+      "description": "自定义分页逻辑实现类，参数为权限定类名.",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "pagehelper.helper-dialect",
+      "description": "数据库方言，默认为自动检测.",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "pagehelper.offset-as-page-num",
+      "description": "使用 RowBounds 时，将 offset 当成 pageNum.",
+      "type": "java.lang.String",
+      "defaultValue": false
+    },
+    {
+      "name": "pagehelper.page-size-zero",
+      "description": "如果 pageSize=0 或者 RowBounds.limit = 0 就会查询出全部的结果.",
+      "type": "java.lang.String",
+      "defaultValue": false
+    },
+    {
+      "name": "pagehelper.params",
+      "description": "支持 startPage(Object params).",
+      "type": "java.lang.String",
+      "defaultValue": "pageNum=pageNum;pageSize=pageSize;count=countSql;reasonable=reasonable;pageSizeZero=pageSizeZero"
+    },
+    {
+      "name": "pagehelper.reasonable",
+      "description": "合理化参数，例如 pageNum<=0 时查询出第一页.",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "pagehelper.row-bounds-with-count",
+      "description": "使用 RowBounds 时，进行 count 查询.",
+      "type": "java.lang.String",
+      "defaultValue": false
+    },
+    {
+      "name": "pagehelper.support-methods-arguments",
+      "description": "启用 Mapper 接口方法参数分页",
+      "type": "java.lang.String"
+    }
+  ],
+  "hints": [
+    {
+      "name": "mapper.identity",
+      "type": "java.lang.String",
+      "values": [
+        {
+          "value": "DB2"
+        },
+        {
+          "value": "MYSQL"
+        },
+        {
+          "value": "SQLSERVER"
+        },
+        {
+          "value": "CLOUDSCAPE"
+        },
+        {
+          "value": "DERBY"
+        },
+        {
+          "value": "HSQLDB"
+        },
+        {
+          "value": "SYBASE"
+        },
+        {
+          "value": "DB2_MF"
+        },
+        {
+          "value": "INFORMIX"
+        },
+        {
+          "value": "JDBC"
+        }
+      ],
+      "providers": [
+        {
+          "name": "any"
+        }
+      ]
+    },
+    {
+      "name": "mapper.seq-format",
+      "type": "java.lang.String",
+      "values": [
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "mapper.style",
+      "type": "java.lang.String",
+      "values": [
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "name": "pagehelper.helper-dialect",
+      "type": "java.lang.String",
+      "values": [
+        {
+          "value": "oracle"
+        },
+        {
+          "value": "mysql"
+        },
+        {
+          "value": "mariadb"
+        },
+        {
+          "value": "sqlite"
+        },
+        {
+          "value": "hsqldb"
+        },
+        {
+          "value": "postgresql"
+        },
+        {
+          "value": "db2"
+        },
+        {
+          "value": "sqlserver"
+        },
+        {
+          "value": "informix"
+        },
+        {
+          "value": "h2"
+        },
+        {
+          "value": "sqlserver2012"
+        },
+        {
+          "value": "derby"
+        }
+      ]
+    }
+  ]
+}

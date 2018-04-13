@@ -1,0 +1,18 @@
+server:
+  context-path: /auth
+  port: 21001
+spring:
+  cloud:
+    consul:
+      host: 127.0.0.1
+      port: 8500
+      discovery:
+        prefer-ip-address: true
+        health-check-path: ${server.context-path}/health
+        tags: management.context-path=${server.context-path}
+  application:
+    name: auth-center
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
