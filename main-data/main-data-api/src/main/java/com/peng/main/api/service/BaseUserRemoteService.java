@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 public interface BaseUserRemoteService {
 
+    /**
+     * 根据用户名查询用户
+     * @param userName
+     * @return
+     */
     @RequestMapping(value = "/user/name/{userName}", method = RequestMethod.GET)
     ResponseData<BaseUser> getUserByUserName(@PathVariable("userName") String userName);
 }

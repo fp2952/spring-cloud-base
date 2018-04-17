@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.apache.commons.lang.StringUtils;
 /**
  * Created by fp295 on 2018/4/9.
  */
@@ -29,6 +29,10 @@ public class BaseUserController implements BaseUserRemoteService{
      */
     @Override
     public ResponseData<BaseUser> getUserByUserName(@PathVariable("userName") String userName) {
+        logger.debug("根据用户名查询用户");
+        if(StringUtils.isEmpty(userName)){
+            return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
+        }
         BaseUser baseUser = new BaseUser();
         baseUser.setUserName(userName);
         baseUser = baseUserService.selectOne(baseUser);
