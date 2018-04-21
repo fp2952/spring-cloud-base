@@ -13,6 +13,6 @@
   </resultMap>
 
   <select id="getRoleByUserId" resultMap="BaseResultMap" parameterType="String">
-    select br.* from base_role br LEFT JOIN base_user_role bur ON br.ID = bur.ROLE_ID ON bur.USER_ID = #{userId}
+    select br.* from base_role br LEFT JOIN base_user_role bur ON br.ID = bur.ROLE_ID WHERE bur.USER_ID = #{userId}
   </select>
 </mapper>

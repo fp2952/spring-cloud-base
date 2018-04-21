@@ -13,6 +13,13 @@ public class BaseGrantedAuthority implements GrantedAuthority {
 
     private BaseRole baseRole;
 
+    public BaseGrantedAuthority(){}
+
+    public BaseGrantedAuthority(BaseUser baseUser, BaseRole baseRole){
+        this.baseUser = baseUser;
+        this.baseRole = baseRole;
+    }
+
     @Override
     public String getAuthority() {
         return baseRole.getRoleCode();
