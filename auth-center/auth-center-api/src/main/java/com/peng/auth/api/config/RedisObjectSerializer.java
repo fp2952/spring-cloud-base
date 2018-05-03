@@ -6,7 +6,9 @@ import org.springframework.core.serializer.support.SerializingConverter;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
-
+/**
+ * RedisSerializer编码解码类
+ */
 public class RedisObjectSerializer implements RedisSerializer {
 
     static final byte[] EMPTY_ARRAY = new byte[0];

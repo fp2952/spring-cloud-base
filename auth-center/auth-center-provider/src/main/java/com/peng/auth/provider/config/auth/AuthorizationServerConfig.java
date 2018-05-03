@@ -1,6 +1,7 @@
 package com.peng.auth.provider.config.auth;
 
 
+import com.peng.auth.api.token.JwtAccessToken;
 import com.peng.auth.provider.service.BaseUserDetailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,30 +54,39 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(getJdbcClientDetails());
+        // 使用JdbcClientDetailsService客户端详情服务
+        clients.withClientDetails(new JdbcClientDetailsService(dataSource));
     }
+
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
+                // 配置JwtAccessToken转换器
                 .accessTokenConverter(jwtAccessTokenConverter())
-                .reuseRefreshTokens(false);
+                // refresh_token需要userDetailsService
+                .reuseRefreshTokens(false).userDetailsService(userDetailsService);
+                //.tokenStore(getJdbcTokenStore());
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
-        oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess(
-                "isAuthenticated()");
+        oauthServer
+                // 开启/oauth/token_key验证端口无权限访问
+                .tokenKeyAccess("permitAll()")
+                // 开启/oauth/check_token验证端口认证权限访问
+                .checkTokenAccess("isAuthenticated()");
     }
 
     /**
-     * key
+     * 使用非对称加密算法来对Token进行签名
      * @return
      */
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
 
-        final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        final JwtAccessTokenConverter converter = new JwtAccessToken();
+        // 导入证书
         KeyStoreKeyFactory keyStoreKeyFactory =
                 new KeyStoreKeyFactory(new ClassPathResource("keystore.jks"), "foobar".toCharArray());
         converter.setKeyPair(keyStoreKeyFactory.getKeyPair("test"));
@@ -84,15 +94,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return converter;
     }
 
-    /**
-     * 客户端
-     */
-    @Bean
-    public JdbcClientDetailsService getJdbcClientDetails()
-
-    {
-        return new JdbcClientDetailsService(dataSource);
-    }
 
     /**
      * 跨域

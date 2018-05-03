@@ -20,14 +20,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Order(ManagementServerProperties.ACCESS_OVERRIDE_ORDER)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    // 自动注入UserDetailsService
     @Autowired
     private BaseUserDetailService baseUserDetailService;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.formLogin().loginPage("/login").permitAll()
+        http    // 配置登陆页/login并允许访问
+                .formLogin().permitAll()
+                // 登出页
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/")
+                // 其余所有请求全部需要鉴权认证
                 .and().authorizeRequests().anyRequest().authenticated()
+                // 由于使用的是JWT，我们这里不需要csrf
                 .and().csrf().disable();
     }
 
@@ -44,11 +49,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        // 设置userDetailsService
         provider.setUserDetailsService(baseUserDetailService);
+        // 禁止隐藏用户未找到异常
         provider.setHideUserNotFoundExceptions(false);
+        // 使用BCrypt进行密码的hash
         provider.setPasswordEncoder(new BCryptPasswordEncoder(6));
         return provider;
     }
-
-
 }

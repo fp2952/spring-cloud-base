@@ -1,4 +1,4 @@
-package com.peng.auth.provider.config.redis;
+package com.peng.auth.spring.boot.autoconfigure.config;
 
 import com.peng.auth.api.config.RedisObjectSerializer;
 import com.peng.main.api.mapper.model.BaseModuleResources;

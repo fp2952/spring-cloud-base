@@ -1,6 +1,6 @@
 package com.peng.auth.provider.service;
 
-import com.peng.auth.api.pojo.auth.BaseGrantedAuthority;
+import com.peng.auth.api.pojo.auth.BaseUserDetail;
 import com.peng.common.pojo.ResponseData;
 import com.peng.main.api.mapper.model.BaseModuleResources;
 import com.peng.main.api.mapper.model.BaseRole;
@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,6 +46,7 @@ public class BaseUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
+        // 调用FeignClient查询用户
         ResponseData<BaseUser> baseUserResponseData = baseUserService.getUserByUserName(username);
         if(baseUserResponseData.getData() == null || !ResponseCode.SUCCESS.getCode().equals(baseUserResponseData.getCode())){
             logger.error("找不到该用户，用户名：" + username);
@@ -52,20 +54,20 @@ public class BaseUserDetailService implements UserDetailsService {
         }
         BaseUser baseUser = baseUserResponseData.getData();
 
-        //查询角色
+        // 调用FeignClient查询角色
         ResponseData<List<BaseRole>> baseRoleListResponseData = baseRoleService.getRoleByUserId(baseUser.getId());
         List<BaseRole> roles;
-        if(baseRoleListResponseData.getData() == null || baseRoleListResponseData.getCode() != ResponseCode.SUCCESS.getCode()){
+        if(baseRoleListResponseData.getData() == null ||  !ResponseCode.SUCCESS.getCode().equals(baseRoleListResponseData.getCode())){
             logger.error("查询角色失败！");
             roles = new ArrayList<>();
         }else {
             roles = baseRoleListResponseData.getData();
         }
 
-        //查询菜单
+        //调用FeignClient查询菜单
         ResponseData<List<BaseModuleResources>> baseModuleResourceListResponseData = baseModuleResourceService.getMenusByUserId(baseUser.getId());
 
-        // 转换权限数据
+        // 获取用户权限列表
         List<GrantedAuthority> authorities = convertToAuthorities(baseUser, roles);
 
         // 存储菜单到redis
@@ -76,8 +78,10 @@ public class BaseUserDetailService implements UserDetailsService {
             });
         }
 
-        return new org.springframework.security.core.userdetails.User(baseUser.getUserName(),
+        // 返回带有用户权限信息的User
+        org.springframework.security.core.userdetails.User user =  new org.springframework.security.core.userdetails.User(baseUser.getUserName(),
                 baseUser.getPassword(), isActive(baseUser.getActive()), true, true, true, authorities);
+        return new BaseUserDetail(baseUser, user);
     }
 
     private boolean isActive(int active){
@@ -89,7 +93,8 @@ public class BaseUserDetailService implements UserDetailsService {
         // 清除 Redis 中用户的角色
         redisTemplate.delete(baseUser.getId());
         roles.forEach(e -> {
-            GrantedAuthority authority = new BaseGrantedAuthority(baseUser, e);
+            // 存储用户、角色信息到GrantedAuthority，并放到GrantedAuthority列表
+            GrantedAuthority authority = new SimpleGrantedAuthority(e.getRoleCode());
             authorities.add(authority);
             //存储角色到redis
             redisTemplate.opsForList().rightPush(baseUser.getId(), e);
