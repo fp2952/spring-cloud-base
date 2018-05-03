@@ -3,9 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import Auth from './plugin/auth-client'
 
 Vue.config.productionTip = false
 
+Vue.use(Auth, router)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
