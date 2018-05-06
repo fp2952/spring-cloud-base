@@ -3,8 +3,10 @@ package com.peng.main.api.mapper.model;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "base_module_resources")
 public class BaseModuleResources implements Serializable {
@@ -50,6 +52,9 @@ public class BaseModuleResources implements Serializable {
 
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
+
+    @Transient
+    private List<BaseModuleResources> subModules;
 
     /**
      * @return ID
@@ -235,5 +240,13 @@ public class BaseModuleResources implements Serializable {
      */
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public List<BaseModuleResources> getSubModules() {
+        return subModules;
+    }
+
+    public void setSubModules(List<BaseModuleResources> subModules) {
+        this.subModules = subModules;
     }
 }

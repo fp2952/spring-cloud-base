@@ -12,7 +12,23 @@
     <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
   </resultMap>
 
-  <select id="getRoleByUserId" resultMap="BaseResultMap" parameterType="String">
-    select br.* from base_role br LEFT JOIN base_user_role bur ON br.ID = bur.ROLE_ID WHERE bur.USER_ID = #{userId}
+  <resultMap id="roleMap" type="com.peng.main.api.mapper.model.BaseRole">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR" />
+    <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    <association column="{ID=ID,USER_ID=USER_ID}" property="modules"
+                 select="com.peng.main.provider.mapper.mapper.BaseModuleResourcesMapper.selectModuleByRoleId" />
+  </resultMap>
+
+  <select id="getRoleByUserId" resultMap="roleMap">
+    select br.*, bur.USER_ID as USER_ID from base_role br
+    LEFT JOIN base_user_role bur ON br.ID = bur.ROLE_ID
+    WHERE bur.USER_ID = #{userId}
   </select>
+
 </mapper>

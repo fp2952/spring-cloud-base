@@ -107,7 +107,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
-        CorsFilter corsFilter = new CorsFilter(source);
-        return new FilterRegistrationBean(corsFilter);
+        FilterRegistrationBean bean =  new FilterRegistrationBean(new CorsFilter(source));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
     }
 }

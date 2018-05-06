@@ -71,7 +71,7 @@ public class BaseUserDetailService implements UserDetailsService {
         List<GrantedAuthority> authorities = convertToAuthorities(baseUser, roles);
 
         // 存储菜单到redis
-        if(baseModuleResourceListResponseData.getCode() == ResponseCode.SUCCESS.getCode() && baseModuleResourceListResponseData.getData() != null){
+        if( ResponseCode.SUCCESS.getCode().equals(baseModuleResourceListResponseData.getCode()) && baseModuleResourceListResponseData.getData() != null){
             resourcesTemplate.delete(baseUser.getId() + "-menu");
             baseModuleResourceListResponseData.getData().forEach(e -> {
                 resourcesTemplate.opsForList().leftPush(baseUser.getId() + "-menu", e);

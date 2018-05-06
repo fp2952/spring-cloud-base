@@ -90,6 +90,9 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
+  },
+  created () {
+    this.$http.put('/role')
   }
 }
 </script>

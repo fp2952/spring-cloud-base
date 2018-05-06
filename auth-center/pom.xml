@@ -13,6 +13,7 @@
         <module>auth-center-provider</module>
         <module>auth-center-api</module>
         <module>auth-spring-boot-autoconfigure</module>
+        <module>auth-spring-boot-starter</module>
     </modules>
     <artifactId>auth-center</artifactId>
 

@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.peng.auth.spring.boot.autoconfigure.AuthResourcesAutoConfiguration,\
+com.peng.auth.spring.boot.autoconfigure.config.WebSecurityConfig,\
+com.peng.auth.spring.boot.autoconfigure.utils.AccessTokenUtils,\
+com.peng.auth.spring.boot.autoconfigure.config.RedisAuthConfiguration

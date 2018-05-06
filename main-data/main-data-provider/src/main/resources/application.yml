@@ -36,6 +36,23 @@ spring:
           prefer-ip-address: true
   application:
       name: main-data
+  redis:
+      database: 0
+      host: 127.0.0.1
+      port: 6379
+# 权限配置
+security:
+  ignored: |
+    /css/**,/js/**,/favicon.ico,/webjars/**,/images/**,
+    /hystrix.stream/**,/info,/error,/health,/env,/metrics,/trace,/dump,
+    /jolokia,/configprops,/activiti,/logfile,/refresh,/flyway,/liquibase,/loggers,
+    /user/name/**,/role/user/**,/menu/user/*
+  oauth2:
+    resource:
+      jwt:
+        key-uri: http://127.0.0.1:21001/auth/oauth/token_key
+      id: ${spring.application.name}
+      serviceId: ${spring.application.name}
 # mybatis 配置
 mybatis:
   type-aliases-package: com.peng.main.api.mapper.model

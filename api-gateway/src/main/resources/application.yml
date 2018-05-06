@@ -14,3 +14,21 @@ zuul:
     main-data:
       path: /main-data/api/**
       serviceId: main-data
+proxy:
+  auth:
+    routes:
+      main-data: oauth2
+security:
+  ignored: |
+    /css/**,/js/**,/favicon.ico,/webjars/**,/images/**,
+    /hystrix.stream/**,/info,/error,/health,/env,/metrics,/trace,/dump,
+    /jolokia,/configprops,/activiti,/logfile,/refresh,/flyway,/liquibase,/loggers
+  oauth2:
+    resource:
+      jwt:
+        key-uri: http://127.0.0.1:21001/auth/oauth/token_key
+      id: ${spring.application.name}
+      serviceId: ${spring.application.name}
+management:
+  security:
+    enabled: false
