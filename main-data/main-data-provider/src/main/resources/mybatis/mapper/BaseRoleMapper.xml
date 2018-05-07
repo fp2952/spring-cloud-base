@@ -21,7 +21,7 @@
     <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
     <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
     <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
-    <association column="{ID=ID,USER_ID=USER_ID}" property="modules"
+    <collection  column="{ID=ID,USER_ID=USER_ID}" property="modules"
                  select="com.peng.main.provider.mapper.mapper.BaseModuleResourcesMapper.selectModuleByRoleId" />
   </resultMap>
 

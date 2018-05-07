@@ -22,7 +22,7 @@
     <el-container>
       <!--左侧菜单 -->
       <el-aside class="main-left">
-        <el-menu class="el-menu-vertical-demo" :unique-opened="true" text-color="#fff" background-color="#545c64" active-text-color="#ffd04b">
+        <el-menu class="el-menu-vertical-demo" :unique-opened="true" :router="true" text-color="#fff" background-color="#545c64" active-text-color="#ffd04b">
           <main-menu v-for="item in menuInfo" :module="item" :key="item.id" @click="clickMenu"></main-menu>
         </el-menu>
       </el-aside>
@@ -45,7 +45,9 @@
           </el-row>
         </el-header>
         <!--content -->
-        <el-main class="main-content">Main</el-main>
+        <el-main class="main-content">
+          <router-view></router-view>
+        </el-main>
         <!--footer-->
         <el-footer height="40px">
           <el-col :span="24" class="main-foot">
@@ -90,209 +92,7 @@ export default {
   data () {
     return {
       tags: [],
-      breadcrumb: [{ title: '首页', path: '/' }],
-      xx: [
-        {
-          parentId: 0,
-          moduleIcon: 'el-icon-message',
-          moduleName: '系统管理',
-          state: 'ENABLE',
-          sort: 0,
-          modulePath: '',
-          type: 'NONE',
-          discription: '用于系统管理的菜单',
-          createUserId: 1,
-          subModules: []
-        }
-      ],
-      menu: [
-        {
-          'id': 1,
-          'parentId': 0,
-          'moduleIcon': 'el-icon-message',
-          'moduleName': '系统管理',
-          'state': 'ENABLE',
-          'sort': 0,
-          'modulePath': '',
-          'type': 'NONE',
-          'discription': '用于系统管理的菜单',
-          'createUserId': 1,
-          'subModules': [
-            {
-              'id': 3,
-              'parentId': 1,
-              'moduleIcon': 'el-icon-loading',
-              'moduleName': '权限管理',
-              'state': 'ENABLE',
-              'sort': 0,
-              'modulePath': '/system/auth',
-              'type': 'LINK',
-              'discription': '用于权限管理的菜单',
-              'createUserId': 1,
-              'subModules': []
-            },
-            {
-              'id': 4,
-              'parentId': 1,
-              'moduleIcon': 'el-icon-bell',
-              'moduleName': '角色管理',
-              'state': 'ENABLE',
-              'sort': 1,
-              'modulePath': '/system/role',
-              'type': 'LINK',
-              'discription': '用于角色管理的菜单',
-              'createUserId': 1,
-              'subModules': []
-            },
-            {
-              'id': 2,
-              'parentId': 1,
-              'moduleIcon': 'el-icon-edit',
-              'moduleName': '菜单管理',
-              'state': 'ENABLE',
-              'sort': 2,
-              'modulePath': '/system/menu',
-              'type': 'LINK',
-              'discription': '用于菜单管理的菜单',
-              'createUserId': 1,
-              'subModules': []
-            },
-            {
-              'id': 5,
-              'parentId': 1,
-              'moduleIcon': 'el-icon-mobile-phone',
-              'moduleName': '分组管理',
-              'state': 'ENABLE',
-              'sort': 3,
-              'modulePath': '/system/group',
-              'type': 'LINK',
-              'discription': '用于分组管理的菜单',
-              'createUserId': 1,
-              'subModules': []
-            }
-          ]
-        },
-        {
-          'id': 6,
-          'parentId': 0,
-          'moduleIcon': 'el-icon-message',
-          'moduleName': '用户管理',
-          'state': 'ENABLE',
-          'sort': 1,
-          'modulePath': '/system/groupsa',
-          'type': 'NONE',
-          'discription': '用于用户管理的菜单',
-          'createUserId': 1,
-          'subModules': [
-            {
-              'id': 7,
-              'parentId': 6,
-              'moduleIcon': 'el-icon-phone-outline',
-              'moduleName': '帐号管理',
-              'state': 'ENABLE',
-              'sort': 0,
-              'modulePath': '/system/groupdsaadssda',
-              'type': 'NONE',
-              'discription': '用于帐号管理的菜单',
-              'createUserId': 1,
-              'subModules': [
-                {
-                  'id': 14,
-                  'parentId': 7,
-                  'moduleIcon': 'el-icon-sold-out',
-                  'moduleName': '邮箱管理',
-                  'state': 'ENABLE',
-                  'sort': 0,
-                  'modulePath': '/content/email',
-                  'type': 'LINK',
-                  'discription': '用于邮箱管理的菜单',
-                  'createUserId': 1,
-                  'subModules': []
-                },
-                {
-                  'id': 13,
-                  'parentId': 7,
-                  'moduleIcon': 'el-icon-service',
-                  'moduleName': '密码管理',
-                  'state': 'ENABLE',
-                  'sort': 1,
-                  'modulePath': '/content/pass',
-                  'type': 'LINK',
-                  'discription': '用于密码管理的菜单',
-                  'createUserId': 1,
-                  'subModules': []
-                }
-              ]
-            },
-            {
-              'id': 8,
-              'parentId': 6,
-              'moduleIcon': 'el-icon-picture',
-              'moduleName': '积分管理',
-              'state': 'ENABLE',
-              'sort': 1,
-              'modulePath': '/user/integral',
-              'type': 'LINK',
-              'discription': '用于积分管理的菜单',
-              'createUserId': 1,
-              'subModules': []
-            }
-          ]
-        },
-        {
-          'id': 9,
-          'parentId': 0,
-          'moduleIcon': 'el-icon-message',
-          'moduleName': '内容管理',
-          'state': 'ENABLE',
-          'sort': 2,
-          'modulePath': '/system/groupdwada',
-          'type': 'NONE',
-          'discription': '用于内容管理的菜单',
-          'createUserId': 1,
-          'subModules': [
-            {
-              'id': 10,
-              'parentId': 9,
-              'moduleIcon': 'el-icon-printer',
-              'moduleName': '分类管理',
-              'state': 'ENABLE',
-              'sort': 0,
-              'modulePath': '/content/classify',
-              'type': 'LINK',
-              'discription': '用于分类管理的菜单',
-              'createUserId': 1,
-              'subModules': []
-            },
-            {
-              'id': 11,
-              'parentId': 9,
-              'moduleIcon': 'el-icon-star-on',
-              'moduleName': '文章管理',
-              'state': 'ENABLE',
-              'sort': 1,
-              'modulePath': '/content/article',
-              'type': 'LINK',
-              'discription': '用于文章管理的菜单',
-              'createUserId': 1,
-              'subModules': []
-            },
-            {
-              'id': 12,
-              'parentId': 9,
-              'moduleIcon': 'el-icon-share',
-              'moduleName': '评论管理',
-              'state': 'ENABLE',
-              'sort': 2,
-              'modulePath': '/content/comment',
-              'type': 'LINK',
-              'discription': '用于评论管理的菜单',
-              'createUserId': 1,
-              'subModules': []
-            }
-          ]
-        }
-      ]
+      breadcrumb: [{ title: '首页', path: '/' }]
     }
   },
   created () {
@@ -353,12 +153,12 @@ export default {
     clickTag (tag) {
       // 点击跳转到指定页面
       this.resetTags(tag.path)
-      // this.$router.push({ path: this.tags[index].path })
+      this.$router.push({ path: tag.path })
     },
     handleClose (index, tag) {
       // 如果已经没有标签页
       if (this.tags.length === 1) {
-        // this.$router.push({ path: '/' })
+        this.$router.push({ path: '/' })
         this.tags.splice(index, 1)
         return
       }
@@ -370,11 +170,11 @@ export default {
       // 如果不是最后一个，关闭后则选中下一个标签页
       if (this.tags.length - 1 !== index) {
         this.tags[index + 1].active = true
-        // this.$router.push({ path: this.tags[index + 1].path })
+        this.$router.push({ path: this.tags[index + 1].path })
       } else if (this.tags.length - 1 === index) {
         // 如果是最后一个，则选中上一个
         this.tags[index - 1].active = true
-        // this.$router.push({ path: this.tags[index - 1].path })
+        this.$router.push({ path: this.tags[index - 1].path })
       }
       this.tags.splice(index, 1)
     }

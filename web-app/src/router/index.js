@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Main from '@/components/Main'
-
 Vue.use(Router)
 
 export default new Router({
@@ -9,7 +7,14 @@ export default new Router({
     {
       path: '/',
       name: 'Main',
-      component: Main
+      component: resolve => require(['@/components/Main.vue'], resolve),
+      children: [
+        {
+          path: '/user',
+          name: 'UserManaged',
+          component: resolve => require(['@/components/user/UserManaged.vue'], resolve)
+        }
+      ]
     }
   ]
 })

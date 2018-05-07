@@ -37,7 +37,7 @@
     <result column="ACTIVE" property="active" jdbcType="INTEGER" />
     <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
     <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
-    <association column="{ID=ID,USER_ID=USER_ID}" property="subModules" select="selectMenusByParentIdWithOperating" />
+    <collection  column="{ID=ID,USER_ID=USER_ID}" property="subModules" select="selectMenusByParentIdWithOperating" />
   </resultMap>
 
   <resultMap id="rolesMap" type="com.peng.main.api.mapper.model.BaseModuleResources">
@@ -57,7 +57,7 @@
     <result column="ACTIVE" property="active" jdbcType="INTEGER" />
     <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
     <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
-    <association column="{ID=ID,USER_ID=USER_ID}" property="subModules" select="selectModuleByParentId" />
+    <collection  column="{ID=ID,USER_ID=USER_ID}" property="subModules" select="selectModuleByParentId" />
   </resultMap>
 
   <select id="getMenusByUserId" resultMap="menuMap">
