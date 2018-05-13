@@ -6,8 +6,6 @@
       WARNING - @mbggenerated
     -->
     <id column="ID" property="id" jdbcType="VARCHAR" />
-    <result column="IP_ADDRESS" property="ipAddress" jdbcType="VARCHAR" />
-    <result column="PORT" property="port" jdbcType="VARCHAR" />
     <result column="SYSTEM_NAME" property="systemName" jdbcType="VARCHAR" />
     <result column="PROJECT_NAME" property="projectName" jdbcType="VARCHAR" />
     <result column="ACTIVE" property="active" jdbcType="INTEGER" />
@@ -15,4 +13,5 @@
     <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
     <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
   </resultMap>
+
 </mapper>

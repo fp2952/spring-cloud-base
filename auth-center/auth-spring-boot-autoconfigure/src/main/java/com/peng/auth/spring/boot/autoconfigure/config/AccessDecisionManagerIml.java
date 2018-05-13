@@ -4,6 +4,7 @@ import com.peng.auth.spring.boot.autoconfigure.utils.AccessTokenUtils;
 import com.peng.main.api.mapper.model.BaseModuleResources;
 import com.peng.main.api.mapper.model.BaseRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
@@ -28,6 +29,9 @@ public class AccessDecisionManagerIml  implements AccessDecisionManager {
     private AntPathMatcher matcher = new AntPathMatcher();
 
     private String[] ignoreds;
+
+    @Value("${spring.application.name}")
+    private String applicationName;
 
     private String url;
 
@@ -86,16 +90,19 @@ public class AccessDecisionManagerIml  implements AccessDecisionManager {
         while (iterator.hasNext())
         {
             BaseModuleResources e = iterator.next();
-            if (e.getIsOperating() == 1 && e.getModulePath() != null && !"".equals(e.getModulePath())) {
-                if (matchUrl(url, e.getModulePath()) && httpMethod.toUpperCase().equals(e.getHttpMethod().toUpperCase())) {
-                    return true;
+            // 匹配当前应用的资源
+            if(applicationName.equals(e.getProjectName())) {
+                if (e.getIsOperating() == 1 && e.getModulePath() != null && !"".equals(e.getModulePath())) {
+                    if (matchUrl(url, e.getModulePath()) && httpMethod.toUpperCase().equals(e.getHttpMethod().toUpperCase())) {
+                        return true;
+                    }
                 }
-            }
 
-            // 递归检查子模块的权限
-            if (e.getSubModules().size() > 0) {
-                if (checkSubModule(e.getSubModules())) {
-                    return true;
+                // 递归检查子模块的权限
+                if (e.getSubModules().size() > 0) {
+                    if (checkSubModule(e.getSubModules())) {
+                        return true;
+                    }
                 }
             }
         }

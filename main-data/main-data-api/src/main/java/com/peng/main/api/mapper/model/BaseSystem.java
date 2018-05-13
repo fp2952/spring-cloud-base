@@ -12,12 +12,6 @@ public class BaseSystem implements Serializable {
     @Column(name = "ID")
     private String id;
 
-    @Column(name = "IP_ADDRESS")
-    private String ipAddress;
-
-    @Column(name = "PORT")
-    private String port;
-
     @Column(name = "SYSTEM_NAME")
     private String systemName;
 
@@ -51,34 +45,6 @@ public class BaseSystem implements Serializable {
      */
     public void setId(String id) {
         this.id = id;
-    }
-
-    /**
-     * @return IP_ADDRESS
-     */
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    /**
-     * @param ipAddress
-     */
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
-
-    /**
-     * @return PORT
-     */
-    public String getPort() {
-        return port;
-    }
-
-    /**
-     * @param port
-     */
-    public void setPort(String port) {
-        this.port = port;
     }
 
     /**

@@ -53,8 +53,17 @@ public class BaseModuleResources implements Serializable {
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
 
+    /**
+     * 资源子项
+     */
     @Transient
     private List<BaseModuleResources> subModules;
+
+    /**
+     * 资源所属系统
+     */
+    @Transient
+    private String projectName;
 
     /**
      * @return ID
@@ -248,5 +257,13 @@ public class BaseModuleResources implements Serializable {
 
     public void setSubModules(List<BaseModuleResources> subModules) {
         this.subModules = subModules;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }
