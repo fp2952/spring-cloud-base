@@ -9,11 +9,11 @@
           <img src="../assets/logo.png" class="main-avatar" />
           <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
-              下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+              {{userInfo.userName}}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="a">个人信息</el-dropdown-item>
-              <el-dropdown-item command="b">注销</el-dropdown-item>
+              <el-dropdown-item command="info">个人信息</el-dropdown-item>
+              <el-dropdown-item command="logout">注销</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-col>
@@ -92,6 +92,7 @@ export default {
   data () {
     return {
       tags: [],
+      tagLenght: 15,
       breadcrumb: [{ title: '首页', path: '/' }]
     }
   },
@@ -148,7 +149,9 @@ export default {
       return false
     },
     handleCommand (command) {
-      console.log(command)
+      if (command === 'logout') {
+        this.$auth.logout()
+      }
     },
     clickTag (tag) {
       // 点击跳转到指定页面

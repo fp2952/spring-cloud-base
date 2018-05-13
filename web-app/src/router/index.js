@@ -13,6 +13,10 @@ export default new Router({
           path: '/user',
           name: 'UserManaged',
           component: resolve => require(['@/components/user/UserManaged.vue'], resolve)
+        }, {
+          path: '/role',
+          name: 'RoleManaged',
+          component: resolve => require(['@/components/role/RoleManaged.vue'], resolve)
         }
       ]
     }

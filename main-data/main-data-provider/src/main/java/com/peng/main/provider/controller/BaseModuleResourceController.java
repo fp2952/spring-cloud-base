@@ -44,7 +44,7 @@ public class BaseModuleResourceController implements BaseModuleResourcesRemoteSe
     }
 
     @GetMapping("/menu")
-    public ResponseData<List<BaseModuleResources>> getMenusByUserId() {
+    public ResponseData<List<BaseModuleResources>> getCurrentMenu() {
         logger.debug("查询当前用户菜单");
         return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), accessTokenUtils.getMenuInfo());
     }
