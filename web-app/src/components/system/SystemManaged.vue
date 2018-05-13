@@ -3,11 +3,11 @@
   <!--查尋條件-->
     <el-row>
     <el-form :inline="true" :model="form" class="demo-form-inline">
-    <el-form-item label="系统编码">
-      <el-input v-model="form.roleCode" placeholder="系统编码"></el-input>
+    <el-form-item label="系统项目名">
+      <el-input v-model="form.projectName" placeholder="系统项目名"></el-input>
     </el-form-item>
     <el-form-item label="系统名称">
-      <el-input v-model="form.roleName" placeholder="系统名称"></el-input>
+      <el-input v-model="form.systemName" placeholder="系统名称"></el-input>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="query">查询</el-button>
@@ -30,14 +30,22 @@
         width="55">
       </el-table-column>
       <el-table-column
-        prop="roleCode"
-        label="系统编码"
+        prop="projectName"
+        label="系统项目名"
         >
       </el-table-column>
       <el-table-column
-        prop="roleName"
+        prop="systemName"
         label="系统名称"
         >
+      </el-table-column>
+      <el-table-column
+        prop="active"
+        label="是否启用">
+        <template scope="scope">
+          <el-tag v-if="scope.row.active === 0" type="danger">否</el-tag>
+          <el-tag v-else type="primary">是</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -62,32 +70,32 @@
       </el-pagination>
     </el-col>
     </el-row>
-    <!--删除角色-->
+    <!--删除系统-->
     <el-dialog
       title="提示"
       :visible.sync="deleteDialogShow"
       width="30%">
-      <span>确定删除选中角色？</span>
+      <span>确定删除选中系统？</span>
       <span slot="footer" class="dialog-footer">
             <el-button @click="deleteDialogShow = false">取 消</el-button>
             <el-button type="danger" :loading="deleteDialogLoading" @click="deleteDialogClick">确 定</el-button>
           </span>
     </el-dialog>
-    <!--新增角色表单-->
-    <add-role ref="addRole" @success="loadTable"></add-role>
-    <!--编辑角色表单-->
-    <edit-role ref="editRole" @success="loadTable"></edit-role>
+    <!--新增系统表单-->
+    <add-system ref="addSystem" @success="loadTable"></add-system>
+    <!--编辑系统表单-->
+    <edit-system ref="editSystem" @success="loadTable"></edit-system>
   </div>
 </template>
 
 <script>
 import {DataMainApi, Status} from '../ApiConstant'
-import RoleAdd from './RoleAdd.vue'
-import RoleEdit from './RoleEdit.vue'
+import AddSystem from './SystemAdd.vue'
+import EditSystem from './SystemEdit.vue'
 export default {
   components: {
-    'add-role': RoleAdd,
-    'edit-role': RoleEdit
+    'add-system': AddSystem,
+    'edit-system': EditSystem
   },
   created () {
     // 加载表格数据
@@ -96,8 +104,8 @@ export default {
   data () {
     return {
       form: {
-        roleCode: null,
-        roleName: null,
+        projectName: null,
+        systemName: null,
         pageNum: 1,
         pageSize: 10
       },
@@ -122,7 +130,7 @@ export default {
     loadTable () {
       var self = this
       self.tableLoading = true
-      this.$http.post(DataMainApi + '/role/table', self.form)
+      this.$http.post(`${DataMainApi}/system/table`, self.form)
         .then(res => {
           if (res.data.code === Status.success) {
             self.tableData = res.data.data.rows
@@ -141,7 +149,7 @@ export default {
       this.selectData = row
     },
     showAddDialog () {
-      this.$refs.addRole.show()
+      this.$refs.addSystem.show()
     },
     handleSizeChange (val) {
       this.form.pageSize = val
@@ -152,21 +160,21 @@ export default {
       this.loadTable()
     },
     showEditDialog (row) {
-      this.$refs.editRole.show(row)
+      this.$refs.editSystem.show(row)
     },
-    // 删除角色
+    // 删除系统
     deleteDialogClick () {
       var self = this
       if (this.selectData.length > 0) {
         this.deleteDialogLoading = true
-        this.$http.delete(`${DataMainApi}/role`, {data: self.selectData})
+        this.$http.delete(`${DataMainApi}/system`, {data: self.selectData})
           .then(res => {
             if (res.data.code === Status.success) {
-              self.$notify.success('删除角色成功')
+              self.$notify.success('删除系统成功')
               self.loadTable()
               self.deleteDialogShow = false
             } else {
-              self.$notify.error('删除角色失败')
+              self.$notify.error('删除系统失败')
             }
             self.deleteDialogLoading = false
           })
@@ -174,7 +182,7 @@ export default {
             self.deleteDialogLoading = false
           })
       } else {
-        self.$notify.warning('请选择需要删除的角色')
+        self.$notify.warning('请选择需要删除的系统')
         self.deleteDialogShow = false
       }
     }

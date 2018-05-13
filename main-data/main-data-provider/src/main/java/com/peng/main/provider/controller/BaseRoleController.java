@@ -85,6 +85,7 @@ public class BaseRoleController extends CrudController<BaseRole, BaseRoleRequest
         logger.debug("添加角色");
         try {
             record.setId(UUID.uuid32());
+            record.setCreateDate(new Date());
             baseRoleService.insertSelective(record);
         } catch (Exception e) {
             logger.error("添加角色失败：" + e.getMessage());

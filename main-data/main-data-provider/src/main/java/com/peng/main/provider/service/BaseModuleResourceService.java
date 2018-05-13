@@ -24,4 +24,8 @@ public class BaseModuleResourceService extends BaseService<BaseModuleResources>{
     public List<BaseModuleResources> getMenusByUserId(String userId) {
         return ((BaseModuleResourcesMapper)mapper).getMenusByUserId(userId);
     }
+
+    public List<BaseModuleResources> getModuleTree(String id, String systemId) {
+        return ((BaseModuleResourcesMapper)mapper).selectModuleTree(id, systemId);
+    }
 }

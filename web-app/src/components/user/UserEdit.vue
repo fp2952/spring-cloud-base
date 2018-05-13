@@ -40,8 +40,8 @@
               inactive-color="#ff4949"
               active-text="启用"
               inactive-text="禁用"
-              active-value="1"
-              inactive-value="0">
+              :active-value="1"
+              :inactive-value="0">
             </el-switch>
           </el-form-item>
         </el-col>
@@ -66,7 +66,7 @@ export default {
         phone: null,
         age: 0,
         gender: null,
-        active: 1
+        active: null
       },
       // 表单验证
       formRules: {

@@ -22,7 +22,10 @@
     <el-container>
       <!--左侧菜单 -->
       <el-aside class="main-left">
-        <el-menu class="el-menu-vertical-demo" :unique-opened="true" :router="true" text-color="#fff" background-color="#545c64" active-text-color="#ffd04b">
+        <el-menu class="el-menu-vertical-demo" :collapse="isCollapse" :unique-opened="true" :router="true" text-color="#fff" background-color="#545c64" active-text-color="#ffd04b">
+          <el-menu-item style="text-align: center;" @click="collapse">
+            <i class="el-icon-d-arrow-left"></i>
+          </el-menu-item>
           <main-menu v-for="item in menuInfo" :module="item" :key="item.id" @click="clickMenu"></main-menu>
         </el-menu>
       </el-aside>
@@ -93,7 +96,8 @@ export default {
     return {
       tags: [],
       tagLenght: 15,
-      breadcrumb: [{ title: '首页', path: '/' }]
+      breadcrumb: [{ title: '首页', path: '/' }],
+      isCollapse: false
     }
   },
   created () {
@@ -116,7 +120,7 @@ export default {
           if (this.tags.length === this.tagLenght) {
             this.tags.splice(0, 1)
           }
-          this.tags.push({ title: menu.$attrs.title, path: menu.index, active: true })
+          this.tags.push({ title: menu.$attrs.title, path: menu.index, active: true, menu: menu })
         }
       } else {
         this.breadcrumb.push({ title: menu.$attrs.title, path: null })
@@ -155,8 +159,8 @@ export default {
     },
     clickTag (tag) {
       // 点击跳转到指定页面
-      this.resetTags(tag.path)
       this.$router.push({ path: tag.path })
+      this.clickMenu(tag.menu)
     },
     handleClose (index, tag) {
       // 如果已经没有标签页
@@ -180,6 +184,9 @@ export default {
         this.$router.push({ path: this.tags[index - 1].path })
       }
       this.tags.splice(index, 1)
+    },
+    collapse () {
+      this.isCollapse = !this.isCollapse
     }
   },
   computed: {
@@ -204,7 +211,8 @@ export default {
     background: #f5f7f9;
   }
   .main-left {
-    width: 210px !important;
+    display: inline-block;
+    width: auto !important;
   }
   .main-right {
     width: 100%;

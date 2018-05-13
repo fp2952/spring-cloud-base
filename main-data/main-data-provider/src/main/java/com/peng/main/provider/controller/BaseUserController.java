@@ -81,6 +81,7 @@ public class BaseUserController extends CrudController<BaseUser, BaseUserRequest
         try {
             logger.debug("用户密码加密");
             record.setId(UUID.uuid32());
+            record.setCreateDate(new Date());
             record.setPassword(new BCryptPasswordEncoder(6).encode(record.getPassword()));
             baseUserService.insertSelective(record);
         } catch (Exception e) {

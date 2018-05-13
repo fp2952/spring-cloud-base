@@ -1,20 +1,23 @@
 <template lang="html">
-  <div>
-  <!--查尋條件-->
-    <el-row>
-    <el-form :inline="true" :model="form" class="demo-form-inline">
-    <el-form-item label="角色编码">
-      <el-input v-model="form.roleCode" placeholder="角色编码"></el-input>
-    </el-form-item>
-    <el-form-item label="角色名称">
-      <el-input v-model="form.roleName" placeholder="角色名称"></el-input>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="query">查询</el-button>
-    </el-form-item>
-    </el-form>
-    </el-row>
-    <el-row style="margin-bottom: 20px">
+<el-row>
+  <el-col :span="6"
+  v-loading="treeLoading"
+  element-loading-text="加载中">
+    <el-tree
+    :data="systemData"
+    node-key="id"
+    ref="tree"
+    lazy
+    highlight-current
+    :expand-on-click-node="false"
+    :default-expanded-keys="expandedKeys"
+    :props="treeProps"
+    :load="loadSubModule"
+    @node-click="selectNode">
+    </el-tree>
+  </el-col>
+  <el-col :span="17" :offset="1">
+   <el-row style="margin-bottom: 20px">
     <el-button type="primary" icon="el-icon-add" @click="showAddDialog">新增</el-button>
     <el-button type="danger" icon="el-icon-delete" @click="showDeleteDialog">删除</el-button>
     </el-row>
@@ -30,22 +33,24 @@
         width="55">
       </el-table-column>
       <el-table-column
-        prop="roleCode"
-        label="角色编码"
-        >
+        prop="moduleName"
+        label="模块名称">
       </el-table-column>
       <el-table-column
-        prop="roleName"
-        label="角色名称"
-        >
+         prop="moduleCode"
+         label="模块编码">
       </el-table-column>
       <el-table-column
-        fixed="right"
-        label="操作"
-        width="300">
-        <template scope="scope" >
+         prop="modulePath"
+         label="模块URL">
+      </el-table-column>
+      <el-table-column
+         prop="sort"
+         label="排序">
+      </el-table-column>
+      <el-table-column label="操作">
+        <template scope="scope">
           <el-button size="small" @click="showEditDialog(scope.row)">编辑</el-button>
-          <el-button type="warning" size="small" @click="showRoleSetDialog(scope.row)">权限配置</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -55,77 +60,127 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="form.pageNum"
+        :current-page="queryForm.pageNum"
         :page-sizes="[5, 10, 20, 50]"
-        :page-size="form.pageSize"
+        :page-size="queryForm.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableTotal">
       </el-pagination>
     </el-col>
     </el-row>
-    <!--删除角色-->
-    <el-dialog
-      title="提示"
-      :visible.sync="deleteDialogShow"
-      width="30%">
-      <span>确定删除选中角色？</span>
-      <span slot="footer" class="dialog-footer">
-            <el-button @click="deleteDialogShow = false">取 消</el-button>
-            <el-button type="danger" :loading="deleteDialogLoading" @click="deleteDialogClick">确 定</el-button>
-          </span>
-    </el-dialog>
-    <!--新增角色表单-->
-    <add-role ref="addRole" @success="loadTable"></add-role>
-    <!--编辑角色表单-->
-    <edit-role ref="editRole" @success="loadTable"></edit-role>
-<!--&lt;!&ndash;设置角色权限&ndash;&gt;
-<role-set ref="roleSetting"></role-set>-->
-  </div>
+  </el-col>
+</el-row>
 </template>
 
 <script>
 import {DataMainApi, Status} from '../ApiConstant'
-import RoleAdd from './RoleAdd.vue'
-import RoleEdit from './RoleEdit.vue'
 export default {
   components: {
-    'add-role': RoleAdd,
-    'edit-role': RoleEdit
   },
   created () {
-    // 加载表格数据
-    this.loadTable()
+    // 初始化模块数
+    this.loadSystem()
   },
   data () {
     return {
-      form: {
-        roleCode: null,
-        roleName: null,
-        pageNum: 1,
-        pageSize: 10
+      // 根节点系统
+      systemData: [],
+      // 默认展开
+      expandedKeys: [],
+      treeProps: {
+        label: 'moduleName',
+        children: 'subModule',
+        isLeaf: 'leaf'
       },
-      // 表格数据
+      treeLoading: false,
+      selectedNode: {},
+      selectedRow: {},
+      queryForm: {
+        pageNum: 1,
+        pageSize: 5,
+        parentId: null,
+        systemId: null
+      },
       tableData: [],
-      tableTotal: 0,
       tableLoading: false,
-      // 删除框
-      deleteDialogShow: false,
-      // 删除按钮loading
-      deleteDialogLoading: false,
-      // 选中行
-      selectData: []
+      tableTotal: 0
     }
   },
   methods: {
-    // 查询数据
-    query () {
-      this.loadTable()
+    // 加载系统根节点
+    loadSystem () {
+      var self = this
+      self.treeLoading = true
+      this.$http.get(`${DataMainApi}/system`)
+        .then(res => {
+          if (res.data.code === Status.success) {
+            self.systemData = res.data.data.map(e => ({
+              id: e.id,
+              moduleName: e.systemName,
+              leaf: false
+            }))
+            setTimeout(function () {
+              self.treeLoading = false
+            }, 500)
+            // 加载首个系统的表格
+            self.queryForm.systemId = self.systemData[0].id
+            self.loadTable()
+            // 设置默认展开
+            self.expandedKeys = ['d69060a3-914b-11e7-8c99-00ff6227aaa1', '113e9c94-8405-11e7-b35a-00ff6227aaa1', 'e69131c2-870d-11e7-ad1e-00ff6227aaa1']
+          } else {
+            self.$notify.error('获取模块树失败')
+          }
+        })
     },
-    // 加载表格数据
+    // 模块树的子节点加载方法
+    loadSubModule (node, resolve) {
+      // 根节点
+      if (node.level === 0) {
+        return
+      }
+      var self = this
+      var query
+      // 加载系统下节点
+      if (node.level === 1) {
+        query = {id: 'root', systemId: node.key}
+      } else {
+        query = {id: node.key}
+      }
+      self.treeLoading = true
+      this.$http.post(`${DataMainApi}/module/tree`, query).then(res => {
+        if (res.data.code === Status.success) {
+          setTimeout(function () {
+            self.treeLoading = false
+          }, 500)
+          return resolve(res.data.data.map(e => ({
+            id: e.id,
+            moduleName: e.moduleName,
+            subModule: e.subModule,
+            leaf: e.subModules.length === 0
+          })))
+        } else {
+          self.$notify.error('获取模块树失败')
+        }
+      })
+    },
+    // 模块树节点点击事件
+    selectNode (data, node) {
+      var self = this
+      // 如果点击的是系统节点
+      if (node.level === 1) {
+        self.queryForm.systemId = data.id
+        self.queryForm.parentId = null
+      } else {
+        self.queryForm.systemId = null
+        self.queryForm.parentId = data.id
+      }
+      self.queryForm.pageNum = 1
+      self.loadTable()
+    },
     loadTable () {
       var self = this
       self.tableLoading = true
-      this.$http.post(DataMainApi + '/role/table', self.form)
+      this.$http.post(`${DataMainApi}/module/table`, self.queryForm)
         .then(res => {
           if (res.data.code === Status.success) {
             self.tableData = res.data.data.rows
@@ -136,54 +191,14 @@ export default {
           }, 500)
         })
     },
-    showDeleteDialog () {
-      this.deleteDialogShow = true
-    },
-    // 表格多选
-    handleSelectionChange (row) {
-      this.selectData = row
-    },
-    showAddDialog () {
-      this.$refs.addRole.show()
-    },
     handleSizeChange (val) {
-      this.form.pageSize = val
+      this.queryForm.pageSize = val
       this.loadTable()
     },
     handleCurrentChange (val) {
-      this.form.pageNum = val
+      this.queryForm.pageNum = val
       this.loadTable()
     },
-    showEditDialog (row) {
-      this.$refs.editRole.show(row)
-    },
-    showRoleSetDialog (row) {
-      this.$refs.roleSetting.show(row)
-    },
-    // 删除角色
-    deleteDialogClick () {
-      var self = this
-      if (this.selectData.length > 0) {
-        this.deleteDialogLoading = true
-        this.$http.delete(`${DataMainApi}/role`, {data: self.selectData})
-          .then(res => {
-            if (res.data.code === Status.success) {
-              self.$notify.success('删除角色成功')
-              self.loadTable()
-              self.deleteDialogShow = false
-            } else {
-              self.$notify.error('删除角色失败')
-            }
-            self.deleteDialogLoading = false
-          })
-          .catch(() => {
-            self.deleteDialogLoading = false
-          })
-      } else {
-        self.$notify.warning('请选择需要删除的角色')
-        self.deleteDialogShow = false
-      }
-    }
   }
 }
 </script>

@@ -15,7 +15,7 @@
       </el-row>
    </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="eidtRoleShow = false">取 消</el-button>
+      <el-button @click="editRoleShow = false">取 消</el-button>
       <el-button type="primary" @click="saveRole" :loading="editRoleLoading">确 定</el-button>
     </div>
   </el-dialog>

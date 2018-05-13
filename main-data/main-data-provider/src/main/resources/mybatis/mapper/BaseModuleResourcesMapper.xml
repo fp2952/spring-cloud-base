@@ -61,6 +61,27 @@
     <collection  column="{ID=ID,USER_ID=USER_ID}" property="subModules" select="selectModuleByParentId" />
   </resultMap>
 
+  <resultMap id="moduleTree" type="com.peng.main.api.mapper.model.BaseModuleResources">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR" />
+    <result column="MODULE_CODE" property="moduleCode" jdbcType="VARCHAR" />
+    <result column="MODULE_PATH" property="modulePath" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+    <result column="MODULE_ICON" property="moduleIcon" jdbcType="VARCHAR" />
+    <result column="HTTP_METHOD" property="httpMethod" jdbcType="VARCHAR" />
+    <result column="IS_OPERATING" property="isOperating" jdbcType="INTEGER" />
+    <result column="SORT" property="sort" jdbcType="INTEGER" />
+    <result column="SYSTEM_ID" property="systemId" jdbcType="VARCHAR" />
+    <result column="ACTIVE" property="active" jdbcType="INTEGER" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="PROJECT_NAME" property="projectName" jdbcType="VARCHAR" />
+    <collection  column="{ID=ID}" property="subModules" select="selectModuleTreeByParentId" />
+  </resultMap>
+
   <select id="getMenusByUserId" resultMap="menuMap">
     SELECT DISTINCT bmr.*, bur.user_id as USER_ID FROM
     base_user_role bur LEFT JOIN base_role_module brm ON bur.role_id = brm.role_id
@@ -88,5 +109,22 @@
     LEFT JOIN base_module_resources bmr ON brm.module_id = bmr.id
     LEFT JOIN base_system bs ON  bmr.SYSTEM_ID = bs.ID
     WHERE bur.user_id = #{USER_ID} AND bmr.parent_id = #{ID}
+  </select>
+
+  <select id="selectModuleTree" resultMap="moduleTree">
+    SELECT * FROM base_module_resources
+    <where>
+      <if test="id == 'root'">
+        PARENT_ID IS NULL AND SYSTEM_ID = #{systemId}
+      </if>
+      <if test="id != 'root'">
+        PARENT_ID = #{id}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectModuleTreeByParentId" resultMap="BaseResultMap">
+    SELECT * FROM base_module_resources
+    WHERE PARENT_ID = #{ID}
   </select>
 </mapper>

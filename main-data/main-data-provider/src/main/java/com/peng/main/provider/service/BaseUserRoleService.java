@@ -18,6 +18,10 @@ import java.util.List;
 @Service
 public class BaseUserRoleService extends BaseService<BaseUserRole>{
 
+    /**
+     * 保存用户角色
+     * @param baseUserRoleList
+     */
     @Transactional
     public void saveUserRole(List<BaseUserRole> baseUserRoleList) {
         if (baseUserRoleList.size() > 0 && !StringUtils.isEmpty(baseUserRoleList.get(0).getRoleId())) {

@@ -33,16 +33,15 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item>
+          <el-form-item label="是否启用">
             <el-switch
-              style="display: block"
               v-model="form.active"
               active-color="#13ce66"
               inactive-color="#ff4949"
               active-text="启用"
               inactive-text="禁用"
-              active-value="1"
-              inactive-value="0">
+              :active-value="1"
+              :inactive-value="0">
             </el-switch>
           </el-form-item>
         </el-col>
@@ -77,7 +76,7 @@ export default {
         phone: null,
         age: 0,
         gender: 'male',
-        active: 0
+        active: 1
       },
       // 表单验证
       formRules: {

@@ -17,6 +17,14 @@ export default new Router({
           path: '/role',
           name: 'RoleManaged',
           component: resolve => require(['@/components/role/RoleManaged.vue'], resolve)
+        }, {
+          path: '/module',
+          name: 'ModuleManaged',
+          component: resolve => require(['@/components/module/ModuleManaged.vue'], resolve)
+        }, {
+          path: '/system',
+          name: 'SystemManaged',
+          component: resolve => require(['@/components/system/SystemManaged.vue'], resolve)
         }
       ]
     }
