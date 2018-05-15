@@ -26,8 +26,8 @@
   </resultMap>
 
   <select id="getRoleByUserId" resultMap="roleMap">
-    select br.*, bur.USER_ID as USER_ID from base_role br
-    LEFT JOIN base_user_role bur ON br.ID = bur.ROLE_ID
+    SELECT br.*, bur.USER_ID as USER_ID FROM
+    base_user_role bur LEFT JOIN base_role br ON bur.ROLE_ID = br.ID
     WHERE bur.USER_ID = #{userId}
   </select>
 

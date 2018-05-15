@@ -9,6 +9,7 @@ import com.peng.main.api.mapper.model.BaseRole;
 import com.peng.main.api.mapper.model.BaseSystem;
 import com.peng.main.api.pojo.ResponseCode;
 import com.peng.main.api.pojo.request.BaseSystemRequest;
+import com.peng.main.api.pojo.response.ModuleAndSystemResponse;
 import com.peng.main.provider.service.BaseSystemService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -115,6 +116,20 @@ public class BaseSystemController extends CrudController<BaseSystem, BaseSystemR
             list = baseSystemService.selectAll();
         } catch (Exception e) {
             logger.error("查询所有系统失败：" + e.getMessage());
+            e.printStackTrace();
+            return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
+        }
+        return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), list);
+    }
+
+    @GetMapping("/system/module")
+    public ResponseData<List<ModuleAndSystemResponse>> getModuleAndSystem() {
+        logger.debug("查询系统及模块树");
+        List<ModuleAndSystemResponse> list;
+        try {
+            list = baseSystemService.selectModuleAndSystem();
+        } catch (Exception e) {
+            logger.error("查询系统及模块树失败：" + e.getMessage());
             e.printStackTrace();
             return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
         }

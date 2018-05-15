@@ -92,7 +92,7 @@ public class AccessDecisionManagerIml  implements AccessDecisionManager {
             BaseModuleResources e = iterator.next();
             // 匹配当前应用的资源
             if(applicationName.equals(e.getProjectName())) {
-                if (e.getIsOperating() == 1 && e.getModulePath() != null && !"".equals(e.getModulePath())) {
+                if (e.getIsOperating() == 1 && e.getActive() == 1 && e.getModulePath() != null && !"".equals(e.getModulePath())) {
                     if (matchUrl(url, e.getModulePath()) && httpMethod.toUpperCase().equals(e.getHttpMethod().toUpperCase())) {
                         return true;
                     }

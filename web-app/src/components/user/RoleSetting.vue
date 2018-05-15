@@ -74,6 +74,9 @@ export default {
           }
           self.roleSettingLoading = false
         })
+        .catch(() => {
+          self.roleSettingLoading = false
+        })
     }
 
   }

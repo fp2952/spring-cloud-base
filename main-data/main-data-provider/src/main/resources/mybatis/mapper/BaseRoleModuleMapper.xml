@@ -9,4 +9,9 @@
     <result column="ROLE_ID" property="roleId" jdbcType="VARCHAR" />
     <result column="MODULE_ID" property="moduleId" jdbcType="VARCHAR" />
   </resultMap>
+
+  <select id="selectLeafRoleModule" resultMap="BaseResultMap">
+    SELECT * FROM base_role_module brm WHERE brm.ROLE_ID = #{roleId} AND
+    (SELECT count(0) FROM base_module_resources bms WHERE bms.parent_id = brm.module_id) = 0
+  </select>
 </mapper>

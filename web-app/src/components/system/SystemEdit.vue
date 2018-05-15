@@ -4,7 +4,9 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="系统项目名">
-            <el-input v-model="form.projectName" :disabled="true"></el-input>
+            <el-tooltip class="item" effect="light" content="系统项目名需与应用的 application.name 值一致" placement="top-start">
+              <el-input v-model="form.projectName"></el-input>
+            </el-tooltip>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -49,9 +51,13 @@ export default {
       },
       // 表单验证
       formRules: {
+        projectName: [
+          { required: true, message: '请输入系统项目名', trigger: 'blur' },
+          { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
+        ],
         systemName: [
           { required: true, message: '请输入系统名称', trigger: 'blur' },
-          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
+          { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
         ]
       },
       editSystemShow: false,
@@ -87,6 +93,9 @@ export default {
               } else {
                 self.$notify.error('保存系统失败！')
               }
+              self.editSystemLoading = false
+            })
+            .catch(() => {
               self.editSystemLoading = false
             })
         } else {

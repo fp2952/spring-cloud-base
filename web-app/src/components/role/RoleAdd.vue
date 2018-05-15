@@ -84,6 +84,9 @@ export default {
               }
               self.addRoleLoading = false
             })
+            .catch(() => {
+              self.addRoleLoading = false
+            })
         } else {
           self.addRoleLoading = false
         }

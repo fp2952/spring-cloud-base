@@ -3,7 +3,7 @@ security:
     /css/**,/js/**,/favicon.ico,/webjars/**,/images/**,
     /hystrix.stream/**,/info,/error,/health,/env,/metrics,/trace,/dump,
     /jolokia,/configprops,/activiti,/logfile,/refresh,/flyway,/liquibase,/loggers,/druid/**,
-    /oauth/deleteToken
+    /oauth/deleteToken, /backReferer
 server:
   context-path: /auth
   port: 21001

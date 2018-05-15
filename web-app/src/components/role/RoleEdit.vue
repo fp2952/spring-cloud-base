@@ -72,6 +72,9 @@ export default {
               }
               self.editRoleLoading = false
             })
+            .catch(() => {
+              self.editRoleLoading = false
+            })
         } else {
           self.editRoleLoading = false
         }

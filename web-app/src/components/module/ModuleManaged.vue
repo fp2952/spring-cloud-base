@@ -1,85 +1,99 @@
 <template lang="html">
-<el-row>
-  <el-col :span="6"
-  v-loading="treeLoading"
-  element-loading-text="加载中">
-    <el-tree
-    :data="systemData"
-    node-key="id"
-    ref="tree"
-    lazy
-    highlight-current
-    :expand-on-click-node="false"
-    :default-expanded-keys="expandedKeys"
-    :props="treeProps"
-    :load="loadSubModule"
-    @node-click="selectNode">
-    </el-tree>
-  </el-col>
-  <el-col :span="17" :offset="1">
-   <el-row style="margin-bottom: 20px">
-    <el-button type="primary" icon="el-icon-add" @click="showAddDialog">新增</el-button>
-    <el-button type="danger" icon="el-icon-delete" @click="showDeleteDialog">删除</el-button>
-    </el-row>
-
-    <el-table
-      :data="tableData"
-      v-loading="tableLoading"
-      element-loading-text="加载中"
-      @selection-change="handleSelectionChange"
-      style="width: 100%; margin-top: 10px">
-       <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        prop="moduleName"
-        label="模块名称">
-      </el-table-column>
-      <el-table-column
-         prop="moduleCode"
-         label="模块编码">
-      </el-table-column>
-      <el-table-column
-         prop="modulePath"
-         label="模块URL">
-      </el-table-column>
-      <el-table-column
-         prop="sort"
-         label="排序">
-      </el-table-column>
-      <el-table-column label="操作">
-        <template scope="scope">
-          <el-button size="small" @click="showEditDialog(scope.row)">编辑</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <el-row style="text-align: center; margin-top: 20px">
-    <el-col :span="24">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="queryForm.pageNum"
-        :page-sizes="[5, 10, 20, 50]"
-        :page-size="queryForm.pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="tableTotal">
-      </el-pagination>
+  <el-row style="margin: 20px;">
+    <el-col :span="6"
+    v-loading="treeLoading"
+    element-loading-text="加载中">
+      <el-tree style="overflow: auto;height: 700px"
+      :data="systemData"
+      node-key="id"
+      ref="tree"
+      lazy
+      highlight-current
+      :expand-on-click-node="false"
+      :default-expanded-keys="expandedKeys"
+      :props="treeProps"
+      :load="loadSubModule"
+      @node-click="selectNode">
+      </el-tree>
     </el-col>
-    </el-row>
-  </el-col>
-</el-row>
+    <el-col :span="17" :offset="1">
+     <el-row style="margin-bottom: 20px">
+      <el-button type="primary" icon="el-icon-add" @click="showAddDialog">新增</el-button>
+      <el-button type="danger" icon="el-icon-delete" @click="showDeleteDialog">删除</el-button>
+     </el-row>
+     <el-table
+        :data="tableData"
+        v-loading="tableLoading"
+        element-loading-text="加载中"
+        @selection-change="handleSelectionChange"
+        style="width: 100%; margin-top: 10px">
+         <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          prop="moduleName"
+          label="模块名称">
+        </el-table-column>
+        <el-table-column
+           prop="moduleCode"
+           label="模块编码">
+        </el-table-column>
+        <el-table-column
+           prop="modulePath"
+           label="模块URL">
+        </el-table-column>
+        <el-table-column
+           prop="sort"
+           label="排序">
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="small" @click="showEditDialog(scope.row)">编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-row style="text-align: center; margin-top: 20px">
+      <el-col :span="24">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="queryForm.pageNum"
+          :page-sizes="[5, 10, 20, 50]"
+          :page-size="queryForm.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tableTotal">
+        </el-pagination>
+      </el-col>
+      </el-row>
+    </el-col>
+    <!--删除模块-->
+    <el-dialog
+      title="提示"
+      :visible.sync="deleteDialogShow"
+      width="30%">
+      <span>确定删除选中模块？</span>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="deleteDialogShow = false">取 消</el-button>
+                <el-button type="danger" :loading="deleteDialogLoading" @click="deleteDialogClick">确 定</el-button>
+              </span>
+    </el-dialog>
+    <!--新增模块表单-->
+    <module-add ref="addModule" @success="reLoadTreeAndTable"></module-add>
+    <!--编辑模块表单-->
+    <module-edit ref="editModule" @success="reLoadTreeAndTable">
+    </module-edit>
+  </el-row>
 </template>
 
 <script>
 import {DataMainApi, Status} from '../ApiConstant'
+import ModuleAdd from './ModuleAdd.vue'
+import ModuleEdit from './ModuleEdit.vue'
 export default {
   components: {
-  },
-  created () {
-    // 初始化模块数
-    this.loadSystem()
+    'module-add': ModuleAdd,
+    'module-edit': ModuleEdit
   },
   data () {
     return {
@@ -103,12 +117,27 @@ export default {
       },
       tableData: [],
       tableLoading: false,
-      tableTotal: 0
+      tableTotal: 0,
+      // 选中行
+      selectData: [],
+      deleteDialogShow: false,
+      deleteDialogLoading: false,
+      currentModule: {
+        moduleId: null,
+        moduleName: null,
+        systemId: null,
+        systemName: null,
+        key: null
+      }
     }
+  },
+  created () {
+    // 初始化模块数
+    this.loadSystem(true)
   },
   methods: {
     // 加载系统根节点
-    loadSystem () {
+    loadSystem (first) {
       var self = this
       self.treeLoading = true
       this.$http.get(`${DataMainApi}/system`)
@@ -122,11 +151,13 @@ export default {
             setTimeout(function () {
               self.treeLoading = false
             }, 500)
-            // 加载首个系统的表格
-            self.queryForm.systemId = self.systemData[0].id
-            self.loadTable()
-            // 设置默认展开
-            self.expandedKeys = ['d69060a3-914b-11e7-8c99-00ff6227aaa1', '113e9c94-8405-11e7-b35a-00ff6227aaa1', 'e69131c2-870d-11e7-ad1e-00ff6227aaa1']
+            if (first) {
+              // 加载首个系统的表格
+              self.queryForm.systemId = self.systemData[0].id
+              self.loadTable()
+              // 设置初始选中
+              self.currentModule.key = self.systemData[0].id
+            }
           } else {
             self.$notify.error('获取模块树失败')
           }
@@ -165,15 +196,20 @@ export default {
     },
     // 模块树节点点击事件
     selectNode (data, node) {
+      console.log(node)
       var self = this
       // 如果点击的是系统节点
       if (node.level === 1) {
+        // 设置表格查询条件
         self.queryForm.systemId = data.id
         self.queryForm.parentId = null
       } else {
+        // 设置表格查询条件
         self.queryForm.systemId = null
         self.queryForm.parentId = data.id
       }
+      // 当前选中模块
+      self.currentModule.key = data.id
       self.queryForm.pageNum = 1
       self.loadTable()
     },
@@ -199,6 +235,90 @@ export default {
       this.queryForm.pageNum = val
       this.loadTable()
     },
+    // 表格多选
+    handleSelectionChange (row) {
+      this.selectData = row
+    },
+    // 设置树展开
+    getExpandedKeys (parent) {
+      // 首次调用
+      if (!parent) {
+        this.expandedKeys = []
+        this.expandedKeys.push(this.currentModule.key)
+        parent = this.$refs.tree.getNode(this.currentModule.key)
+      } else {
+        this.expandedKeys.push(parent.key)
+      }
+      if (parent.parent.level !== 0) {
+        this.getExpandedKeys(parent.parent)
+      } else {
+        // 递归完毕
+        this.expandedKeys.reverse()
+      }
+    },
+    // 获取选中节点信息
+    getCurrentNode (parent) {
+      // 首次调用
+      if (!parent) {
+        parent = this.$refs.tree.getNode(this.currentModule.key)
+        this.currentModule.moduleId = parent.key
+        this.currentModule.moduleName = parent.label
+      }
+      if (parent.parent.level !== 0) {
+        this.getCurrentNode(parent.parent)
+      } else {
+        // 递归完毕
+        this.currentModule.systemId = parent.key
+        this.currentModule.systemName = parent.label
+        // 判断模块id是否等于系统id
+        if (parent.key === this.currentModule.moduleId) {
+          this.currentModule.moduleId = null
+          this.currentModule.moduleName = null
+        }
+      }
+    },
+    // 新增模块
+    showAddDialog () {
+      this.getCurrentNode()
+      this.$refs.addModule.show(this.currentModule)
+    },
+    // 编辑模块
+    showEditDialog (row) {
+      this.getCurrentNode()
+      this.$refs.editModule.show(row, this.currentModule)
+    },
+    showDeleteDialog () {
+      this.deleteDialogShow = true
+    },
+    // 删除模块
+    deleteDialogClick () {
+      var self = this
+      if (this.selectData.length > 0) {
+        this.deleteDialogLoading = true
+        this.$http.delete(`${DataMainApi}/module`, {data: self.selectData})
+          .then(res => {
+            if (res.data.code === Status.success) {
+              self.$notify.success('删除模块成功')
+              self.reLoadTreeAndTable()
+              self.deleteDialogShow = false
+            } else {
+              self.$notify.error('删除模块失败')
+            }
+            self.deleteDialogLoading = false
+          })
+          .catch(() => {
+            self.deleteDialogLoading = false
+          })
+      } else {
+        self.$notify.warning('请选择需要删除的系统')
+        self.deleteDialogShow = false
+      }
+    },
+    reLoadTreeAndTable () {
+      this.loadSystem()
+      this.getExpandedKeys()
+      this.loadTable()
+    }
   }
 }
 </script>

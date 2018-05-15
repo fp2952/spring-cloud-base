@@ -8,10 +8,12 @@ import com.peng.common.utils.UUID;
 import com.peng.db.spring.boot.autoconfigure.controller.CrudController;
 import com.peng.main.api.mapper.model.BaseModuleResources;
 import com.peng.main.api.mapper.model.BaseRole;
+import com.peng.main.api.mapper.model.BaseRoleModule;
 import com.peng.main.api.pojo.ResponseCode;
 import com.peng.main.api.pojo.request.BaseModuleResourcesRequest;
 import com.peng.main.api.service.BaseModuleResourcesRemoteService;
 import com.peng.main.provider.service.BaseModuleResourceService;
+import com.peng.main.provider.service.BaseRoleModuleService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,9 @@ public class BaseModuleResourceController extends CrudController<BaseModuleResou
 
     @Autowired
     private AccessTokenUtils accessTokenUtils;
+
+    @Autowired
+    private BaseRoleModuleService baseRoleModuleService;
 
     @Override
     public ResponseData<List<BaseModuleResources>> getMenusByUserId(@PathVariable("userId") String userId) {
@@ -86,7 +91,7 @@ public class BaseModuleResourceController extends CrudController<BaseModuleResou
         } else {
             return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
         }
-
+        example.orderBy("sort");
         PageInfo<BaseModuleResources> pageInfo = baseModuleResourceService.selectByExampleList(example, query.getPageNum(), query.getPageSize());
 
         return getTableData(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), pageInfo);
@@ -135,5 +140,31 @@ public class BaseModuleResourceController extends CrudController<BaseModuleResou
             return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
         }
         return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage());
+    }
+
+    @GetMapping("/module/validate/{moduleCode}")
+    public ResponseData<BaseModuleResources> validateModuleCode(@PathVariable("moduleCode") String moduleCode) {
+        logger.debug("校验模块编码是否存在");
+        BaseModuleResources baseModuleResources = new BaseModuleResources();
+        baseModuleResources.setModuleCode(moduleCode);
+        baseModuleResources = baseModuleResourceService.selectOne(baseModuleResources);
+        if(baseModuleResources == null) {
+            return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage());
+        }
+        return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
+    }
+
+    @PostMapping("/module/role")
+    public ResponseData saveRoleResourcesAuth(@RequestBody List<BaseRoleModule> roleModule) {
+        logger.debug("保存角色权限");
+        try {
+            baseRoleModuleService.saveRoleModule(roleModule);
+        } catch (RuntimeException e) {
+            logger.error("保存角色权限失败" + e.getMessage());
+            e.printStackTrace();
+            return new ResponseData(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
+        }
+
+        return new ResponseData(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage());
     }
 }

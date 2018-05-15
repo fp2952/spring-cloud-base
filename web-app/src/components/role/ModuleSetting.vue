@@ -1,5 +1,5 @@
 <template lang="html">
-  <el-dialog title="权限配置" :visible.sync="moduleSettingShow">
+  <el-dialog title="权限配置" :visible.sync="roleSettingShow">
    <el-tree
       :data="modules"
       show-checkbox
@@ -7,11 +7,11 @@
       node-key="id"
       ref="tree"
       highlight-current
-      :props="defaultProps">
+      :props="treeProps">
     </el-tree>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="editUserShow = false">取 消</el-button>
-      <el-button type="primary" @click="saveUser" :loading="editUserLoading">确 定</el-button>
+      <el-button @click="roleSettingShow = false">取 消</el-button>
+      <el-button type="primary" @click="saveRoleSetting" :loading="roleSettingLoading">确 定</el-button>
     </div>
   </el-dialog>
 </template>
@@ -21,68 +21,71 @@ export default {
   data () {
     return {
       modules: [],
-      selected: [],
+      systemIds: [],
       roleSettingShow: false,
       roleSettingLoading: false,
-      userId: ''
+      roleId: '',
+      treeProps: {
+        label: 'moduleName',
+        children: 'subModules'
+      }
     }
   },
   created () {
-    this.getAllRole()
+    this.loadTree()
   },
   methods: {
     show (row) {
       this.roleSettingShow = true
-      this.userId = row.id
-      this.getUserRole()
+      this.roleId = row.id
+      this.loadRoleAuthData()
     },
-    // 获取所有角色
-    getAllRole () {
+    loadTree () {
       var self = this
-      self.$http.get(`${DataMainApi}/role`, self.form)
+      self.$http.get(`${DataMainApi}/system/module`)
         .then(res => {
           if (res.data.code === Status.success) {
-            self.roles = res.data.data.map(
-              item => ({
-                key: item.id,
-                label: item.roleName
-              })
-            )
+            self.modules = res.data.data
+            self.systemIds = res.data.data.map(item => item.id)
           }
         })
     },
-    // 获取已授权角色
-    getUserRole () {
+    // 获取已授权的数据
+    loadRoleAuthData () {
       var self = this
-      self.$http.get(`${DataMainApi}/user/role/${self.userId}`)
+      self.$http.get(`${DataMainApi}/role/auth/${self.roleId}`)
         .then(res => {
           if (res.data.code === Status.success) {
-            self.selected = res.data.data.map(item => item.roleId)
+            self.$refs.tree.setCheckedKeys(res.data.data.map(item => item.moduleId))
           }
         })
     },
     saveRoleSetting () {
       var self = this
-      // 校验表单
       self.roleSettingLoading = true
-      var userRole = self.selected.map(item => ({
-        userId: self.userId,
-        roleId: item
-      }))
-      self.$http.post(`${DataMainApi}/user/role`, userRole)
+      // 获取全部选中节点key
+      var keys = self.$refs.tree.getCheckedKeys().concat(self.$refs.tree.getHalfCheckedKeys())
+      const difference = (a, b) => { const s = new Set(b); return a.filter(x => !s.has(x)) }
+      // difference([1,2,3], [1,2]) -> [3]
+      // 提交过滤掉系统节点的key
+      self.$http.post(`${DataMainApi}/module/role`,
+        difference(keys, self.systemIds).map(item => ({
+          roleId: self.roleId,
+          moduleId: item
+        })))
         .then(res => {
           if (res.data.code === Status.success) {
-            self.$notify.success('保存用户角色成功！')
+            self.$notify.success('保存授权模块成功！')
             self.roleSettingShow = false
-            // 触发事件
-            self.$emit('success')
           } else {
-            self.$notify.error('保存用户角色失败！')
+            self.$notify.error('保存授权模块失败！')
           }
           self.roleSettingLoading = false
         })
+        .catch(() => {
+          self.roleSettingLoading = false
+        })
     }
-
   }
 }
 </script>

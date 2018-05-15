@@ -42,7 +42,7 @@
       <el-table-column
         prop="active"
         label="是否启用">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tag v-if="scope.row.active === 0" type="danger">否</el-tag>
           <el-tag v-else type="primary">是</el-tag>
         </template>
@@ -51,7 +51,7 @@
         fixed="right"
         label="操作"
         width="300">
-        <template scope="scope" >
+        <template slot-scope="scope" >
           <el-button size="small" @click="showEditDialog(scope.row)">编辑</el-button>
         </template>
       </el-table-column>

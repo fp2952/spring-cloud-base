@@ -25,6 +25,10 @@ export default new Router({
           path: '/system',
           name: 'SystemManaged',
           component: resolve => require(['@/components/system/SystemManaged.vue'], resolve)
+        }, {
+          path: '/app',
+          name: 'AppManaged',
+          component: resolve => require(['@/components/app/AppManaged.vue'], resolve)
         }
       ]
     }

@@ -6,10 +6,12 @@ import com.peng.common.pojo.TableData;
 import com.peng.common.utils.UUID;
 import com.peng.db.spring.boot.autoconfigure.controller.CrudController;
 import com.peng.main.api.mapper.model.BaseRole;
+import com.peng.main.api.mapper.model.BaseRoleModule;
 import com.peng.main.api.mapper.model.BaseUser;
 import com.peng.main.api.pojo.ResponseCode;
 import com.peng.main.api.pojo.request.BaseRoleRequest;
 import com.peng.main.api.service.BaseRoleRemoteService;
+import com.peng.main.provider.service.BaseRoleModuleService;
 import com.peng.main.provider.service.BaseRoleService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -31,6 +33,9 @@ public class BaseRoleController extends CrudController<BaseRole, BaseRoleRequest
 
     @Autowired
     private BaseRoleService baseRoleService;
+
+    @Autowired
+    private BaseRoleModuleService baseRoleModuleService;
 
     @Override
     public ResponseData<List<BaseRole>> getRoleByUserId(@PathVariable("userId") String userId) {
@@ -134,5 +139,19 @@ public class BaseRoleController extends CrudController<BaseRole, BaseRoleRequest
             return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage());
         }
         return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
+    }
+
+    @GetMapping("/role/auth/{roleId}")
+    public ResponseData<List<BaseRoleModule>> getAuthModule(@PathVariable("roleId") String roleId) {
+        logger.debug("查询角色已授权模块");
+        List<BaseRoleModule> list;
+        try {
+            list = baseRoleModuleService.selectLeafRoleModule(roleId);
+        } catch (Exception e) {
+            logger.error("查询角色已授权模块失败：" + e.getMessage());
+            e.printStackTrace();
+            return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
+        }
+        return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), list);
     }
 }

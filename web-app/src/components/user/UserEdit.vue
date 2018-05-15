@@ -112,6 +112,9 @@ export default {
               }
               self.editUserLoading = false
             })
+            .catch(() => {
+              self.editUserLoading = false
+            })
         } else {
           self.editUserLoading = false
         }

@@ -82,11 +82,22 @@
     <collection  column="{ID=ID}" property="subModules" select="selectModuleTreeByParentId" />
   </resultMap>
 
+  <resultMap id="ModuleAndSystemMap" type="com.peng.main.api.pojo.response.ModuleAndSystemResponse" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR" />
+    <collection  column="{ID=ID}" property="subModules"
+                 select="selectModuleAndSystemByParentId" />
+  </resultMap>
+
   <select id="getMenusByUserId" resultMap="menuMap">
     SELECT DISTINCT bmr.*, bur.user_id as USER_ID FROM
     base_user_role bur LEFT JOIN base_role_module brm ON bur.role_id = brm.role_id
     LEFT JOIN base_module_resources bmr ON brm.module_id = bmr.id
-    WHERE bur.user_id = #{userId} AND bmr.parent_id IS NULL AND bmr.IS_OPERATING = 0
+    LEFT JOIN base_system bs ON  bmr.SYSTEM_ID = bs.ID
+    WHERE bur.user_id = #{userId} AND bmr.parent_id IS NULL AND bmr.IS_OPERATING = 0 AND bs.ACTIVE = 1
   </select>
 
   <select id="selectMenusByParentIdWithOperating" resultMap="menuMap">
@@ -99,10 +110,11 @@
   <select id="selectModuleByRoleId" resultMap="rolesMap">
     SELECT bmr.*, bur.user_id as USER_ID, bs.PROJECT_NAME FROM base_role_module brm
     LEFT JOIN base_module_resources bmr on brm.MODULE_ID = bmr.ID
-    LEFT JOIN base_user_role bur ON bur.role_id = brm.role_id
     LEFT JOIN base_system bs ON  bmr.SYSTEM_ID = bs.ID
-    WHERE brm.ROLE_ID = #{ID} and bur.user_id = #{USER_ID} and bmr.parent_id is null
+    LEFT JOIN base_user_role bur ON bur.role_id = brm.role_id
+    WHERE brm.ROLE_ID = #{ID} and bur.user_id = #{USER_ID} and bmr.parent_id is null and bs.ACTIVE = 1
   </select>
+
   <select id="selectModuleByParentId" resultMap="rolesMap">
     SELECT DISTINCT bmr.*, bur.user_id as USER_ID, bs.PROJECT_NAME FROM base_user_role bur
     LEFT JOIN base_role_module brm ON bur.role_id = brm.role_id
@@ -127,4 +139,15 @@
     SELECT * FROM base_module_resources
     WHERE PARENT_ID = #{ID}
   </select>
+
+  <select id="selectModuleAndSystemBySystemId" resultMap="ModuleAndSystemMap">
+    SELECT ID, MODULE_NAME FROM base_module_resources
+    WHERE SYSTEM_ID = #{ID} AND PARENT_ID is null
+  </select>
+
+  <select id="selectModuleAndSystemByParentId" resultMap="ModuleAndSystemMap">
+    SELECT ID, MODULE_NAME FROM base_module_resources
+    WHERE  PARENT_ID = #{ID}
+  </select>
+
 </mapper>

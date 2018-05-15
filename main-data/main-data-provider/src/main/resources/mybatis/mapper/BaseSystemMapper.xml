@@ -14,4 +14,18 @@
     <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
   </resultMap>
 
+  <resultMap id="ModuleAndSystemMap" type="com.peng.main.api.pojo.response.ModuleAndSystemResponse" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SYSTEM_NAME" property="moduleName" jdbcType="VARCHAR" />
+    <collection  column="{ID=ID}" property="subModules"
+                 select="com.peng.main.provider.mapper.mapper.BaseModuleResourcesMapper.selectModuleAndSystemBySystemId" />
+  </resultMap>
+
+  <select id="selectModuleAndSystem" resultMap="ModuleAndSystemMap">
+    select ID, SYSTEM_NAME FROM base_system
+  </select>
+
 </mapper>

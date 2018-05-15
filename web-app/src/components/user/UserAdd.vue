@@ -124,6 +124,9 @@ export default {
               }
               self.addUserLoading = false
             })
+            .catch(() => {
+              self.addUserLoading = false
+            })
         } else {
           self.addUserLoading = false
         }

@@ -3,11 +3,8 @@
   <!--查尋條件-->
     <el-row>
     <el-form :inline="true" :model="form" class="demo-form-inline">
-    <el-form-item label="用户名">
-      <el-input v-model="form.userName" placeholder="用户名"></el-input>
-    </el-form-item>
-    <el-form-item label="手机号码">
-      <el-input v-model="form.phone" placeholder="手机号码"></el-input>
+    <el-form-item label="应用名称">
+      <el-input v-model="form.name" placeholder="应用名称"></el-input>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="query">查询</el-button>
@@ -16,7 +13,6 @@
     </el-row>
     <el-row style="margin-bottom: 20px">
     <el-button type="primary" icon="el-icon-add" @click="showAddDialog">新增</el-button>
-    <el-button type="warning" icon="el-icon-setting" @click="showResetDialog">重置密码</el-button>
     <el-button type="danger" icon="el-icon-delete" @click="showDeleteDialog">删除</el-button>
     </el-row>
 
@@ -31,34 +27,55 @@
         width="55">
       </el-table-column>
       <el-table-column
-        prop="userName"
-        label="用户名"
-        >
+        prop="name"
+        label="应用名称">
       </el-table-column>
       <el-table-column
-        prop="phone"
-        label="手机号码"
-        >
+        prop="clientId"
+        label="应用id">
       </el-table-column>
       <el-table-column
-        prop="age"
-        label="年龄"
-      >
-      </el-table-column>
+        prop="clientSecret"
+        label="应用secret">
+        </el-table-column>
       <el-table-column
-        prop="gender"
-        label="性别">
+        prop="authorizedGrantTypes"
+        label="授权模式"
+        width="300">
         <template slot-scope="scope">
-            <el-tag v-if="scope.row.gender === 'female'" type="danger">女</el-tag>
-            <el-tag v-else type="primary">男</el-tag>
+          <el-tag v-for="item in splitAuthorizedGrantTypes(scope.row.authorizedGrantTypes)"
+          type="success" style="margin-right: 5px;" :key="item">
+            <template v-if="item === 'authorization_code'">
+              授权码
+            </template>
+            <template v-else-if="item === 'refresh_token'">
+              刷新
+            </template>
+            <template v-else-if="item === 'password'">
+              密码
+            </template>
+            <template v-else-if="item === 'implicit'">
+              简化
+            </template>
+            <template v-else-if="item === 'client_credentials'">
+              客户端
+            </template>
+            <template v-else>
+              无
+            </template>
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
-        prop="active"
-        label="是否启用">
+        prop="accessTokenValidity"
+        label="token有效期(秒)">
+      </el-table-column>
+      <el-table-column
+        prop="autoapprove"
+        label="静默授权">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.active === 0" type="danger">否</el-tag>
-          <el-tag v-else type="primary">是</el-tag>
+          <el-tag v-if="scope.row.autoapprove === 'true'" type="success">启用</el-tag>
+          <el-tag v-else type="danger">禁用</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -67,8 +84,6 @@
         width="300">
         <template slot-scope="scope" >
           <el-button size="small" @click="showEditDialog(scope.row)">编辑</el-button>
-          <el-button type="warning" size="small" @click="showRoleSetDialog(scope.row)">角色配置</el-button>
-          <el-button type="danger" size="small" @click="showResetDialogByCol(scope.row)">重置密码</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -86,47 +101,32 @@
       </el-pagination>
     </el-col>
     </el-row>
-    <!--重置密码-->
-    <el-dialog
-      title="提示"
-      :visible.sync="resetDialogShow"
-      width="30%">
-      <span>确定重置密码为 000000 ？</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="resetDialogShow = false">取 消</el-button>
-        <el-button type="danger" :loading="resetDialogLoading" @click="resetDialogClick">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!--删除用户-->
+    <!--删除系统-->
     <el-dialog
       title="提示"
       :visible.sync="deleteDialogShow"
       width="30%">
-      <span>确定删除选中用户？</span>
+      <span>确定删除选中系统？</span>
       <span slot="footer" class="dialog-footer">
             <el-button @click="deleteDialogShow = false">取 消</el-button>
             <el-button type="danger" :loading="deleteDialogLoading" @click="deleteDialogClick">确 定</el-button>
           </span>
     </el-dialog>
-    <!--新增用户表单-->
-    <add-user ref="addUser" @success="loadTable"></add-user>
-    <!--编辑用户表单-->
-    <edit-user ref="editUser" @success="loadTable"></edit-user>
-    <!--设置角色-->
-    <role-set ref="roleSetting"></role-set>
+    <!--新增应用表单-->
+    <add-app ref="addApp" @success="loadTable"></add-app>
+    <!--编辑应用表单-->
+    <edit-app ref="editApp" @success="loadTable"></edit-app>
   </div>
 </template>
 
 <script>
 import {DataMainApi, Status} from '../ApiConstant'
-import UserAddForm from './UserAdd.vue'
-import UserEditFrom from './UserEdit.vue'
-import RoleSetting from './RoleSetting.vue'
+import AddApp from './AppAdd.vue'
+import EditApp from './AppEdit.vue'
 export default {
   components: {
-    'add-user': UserAddForm,
-    'edit-user': UserEditFrom,
-    'role-set': RoleSetting
+    'add-app': AddApp,
+    'edit-app': EditApp
   },
   created () {
     // 加载表格数据
@@ -135,8 +135,7 @@ export default {
   data () {
     return {
       form: {
-        userName: null,
-        phone: null,
+        name: null,
         pageNum: 1,
         pageSize: 10
       },
@@ -144,10 +143,6 @@ export default {
       tableData: [],
       tableTotal: 0,
       tableLoading: false,
-      // 重置密码框
-      resetDialogShow: false,
-      // 重置按钮loading
-      resetDialogLoading: false,
       // 删除框
       deleteDialogShow: false,
       // 删除按钮loading
@@ -165,7 +160,7 @@ export default {
     loadTable () {
       var self = this
       self.tableLoading = true
-      this.$http.post(DataMainApi + '/user/table', self.form)
+      this.$http.post(`${DataMainApi}/client/table`, self.form)
         .then(res => {
           if (res.data.code === Status.success) {
             self.tableData = res.data.data.rows
@@ -176,6 +171,16 @@ export default {
           }, 500)
         })
     },
+    showDeleteDialog () {
+      this.deleteDialogShow = true
+    },
+    // 表格多选
+    handleSelectionChange (row) {
+      this.selectData = row
+    },
+    showAddDialog () {
+      this.$refs.addApp.show()
+    },
     handleSizeChange (val) {
       this.form.pageSize = val
       this.loadTable()
@@ -184,66 +189,22 @@ export default {
       this.form.pageNum = val
       this.loadTable()
     },
-    showResetDialog () {
-      this.resetDialogShow = true
-    },
-    showDeleteDialog () {
-      this.deleteDialogShow = true
-    },
-    showResetDialogByCol (row) {
-      this.selectData = [row]
-      this.resetDialogShow = true
-    },
-    showAddDialog () {
-      this.$refs.addUser.show()
-    },
-    // 表格多选
-    handleSelectionChange (row) {
-      this.selectData = row
-    },
     showEditDialog (row) {
-      this.$refs.editUser.show(row)
+      this.$refs.editApp.show(row)
     },
-    showRoleSetDialog (row) {
-      this.$refs.roleSetting.show(row)
-    },
-    // 重置密码
-    resetDialogClick () {
-      var self = this
-      if (this.selectData.length > 0) {
-        this.resetDialogLoading = true
-        this.$http.post(DataMainApi + '/user/password/000000', this.selectData)
-          .then(res => {
-            if (res.data.code === Status.success) {
-              self.$notify.success('重置密码成功')
-              self.loadTable()
-              self.resetDialogShow = false
-            } else {
-              self.$notify.error('重置密码失败')
-            }
-            self.resetDialogLoading = false
-          })
-          .catch(() => {
-            self.resetDialogLoading = false
-          })
-      } else {
-        self.$notify.warning('请选择需要重置密码的用户')
-        self.resetDialogShow = false
-      }
-    },
-    // 删除用户
+    // 删除应用
     deleteDialogClick () {
       var self = this
       if (this.selectData.length > 0) {
         this.deleteDialogLoading = true
-        this.$http.delete(DataMainApi + '/user', {data: self.selectData})
+        this.$http.delete(`${DataMainApi}/client`, {data: self.selectData})
           .then(res => {
             if (res.data.code === Status.success) {
-              self.$notify.success('删除用户成功')
+              self.$notify.success('删除应用成功')
               self.loadTable()
               self.deleteDialogShow = false
             } else {
-              self.$notify.error('删除用户失败')
+              self.$notify.error('删除应用失败')
             }
             self.deleteDialogLoading = false
           })
@@ -251,9 +212,12 @@ export default {
             self.deleteDialogLoading = false
           })
       } else {
-        self.$notify.warning('请选择需要删除的用户')
+        self.$notify.warning('请选择需要删除的应用')
         self.deleteDialogShow = false
       }
+    },
+    splitAuthorizedGrantTypes (val) {
+      return val.split(',')
     }
   }
 }

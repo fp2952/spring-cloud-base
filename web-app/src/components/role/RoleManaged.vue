@@ -43,7 +43,7 @@
         fixed="right"
         label="操作"
         width="300">
-        <template scope="scope" >
+        <template slot-scope="scope" >
           <el-button size="small" @click="showEditDialog(scope.row)">编辑</el-button>
           <el-button type="warning" size="small" @click="showRoleSetDialog(scope.row)">权限配置</el-button>
         </template>
@@ -78,8 +78,8 @@
     <add-role ref="addRole" @success="loadTable"></add-role>
     <!--编辑角色表单-->
     <edit-role ref="editRole" @success="loadTable"></edit-role>
-<!--&lt;!&ndash;设置角色权限&ndash;&gt;
-<role-set ref="roleSetting"></role-set>-->
+    <!--设置角色权限-->
+    <role-module-setting ref="roleSetting"></role-module-setting>
   </div>
 </template>
 
@@ -87,10 +87,12 @@
 import {DataMainApi, Status} from '../ApiConstant'
 import RoleAdd from './RoleAdd.vue'
 import RoleEdit from './RoleEdit.vue'
+import RoleModuleSetting from './ModuleSetting.vue'
 export default {
   components: {
     'add-role': RoleAdd,
-    'edit-role': RoleEdit
+    'edit-role': RoleEdit,
+    'role-module-setting': RoleModuleSetting
   },
   created () {
     // 加载表格数据

@@ -23,8 +23,9 @@
       <!--左侧菜单 -->
       <el-aside class="main-left">
         <el-menu class="el-menu-vertical-demo" :collapse="isCollapse" :unique-opened="true" :router="true" text-color="#fff" background-color="#545c64" active-text-color="#ffd04b">
-          <el-menu-item style="text-align: center;" @click="collapse">
-            <i class="el-icon-d-arrow-left"></i>
+          <!--collapse-->
+          <el-menu-item style="text-align: center;" @click="collapse" index="">
+            <i :class="isCollapse ? 'el-icon-d-arrow-right' : 'el-icon-d-arrow-left'"></i>
           </el-menu-item>
           <main-menu v-for="item in menuInfo" :module="item" :key="item.id" @click="clickMenu"></main-menu>
         </el-menu>
@@ -67,7 +68,7 @@ import { mapGetters, mapActions } from 'vuex'
 
 var Menu = {
   template: '<el-menu-item v-if="module.subModules.length === 0" :index="module.modulePath" ' +
-  ':title="module.moduleName" :parent="module.parentId" :key="module.id" @click="click">' +
+  ':title="module.moduleName" :parent="module.parentId" :key="module.id" :disabled="module.active !== 1" @click="click">' +
   '<i :class="module.moduleIcon ? module.moduleIcon : \'el-icon-star-off\'"></i>' +
   '<span slot="title">{{ module.moduleName }}</span>' +
   '</el-menu-item>' +
@@ -166,6 +167,7 @@ export default {
       // 如果已经没有标签页
       if (this.tags.length === 1) {
         this.$router.push({ path: '/' })
+        this.breadcrumb = [{ title: '首页', path: '/' }]
         this.tags.splice(index, 1)
         return
       }
@@ -176,12 +178,12 @@ export default {
       }
       // 如果不是最后一个，关闭后则选中下一个标签页
       if (this.tags.length - 1 !== index) {
-        this.tags[index + 1].active = true
         this.$router.push({ path: this.tags[index + 1].path })
+        this.clickMenu(this.tags[index + 1].menu)
       } else if (this.tags.length - 1 === index) {
         // 如果是最后一个，则选中上一个
-        this.tags[index - 1].active = true
         this.$router.push({ path: this.tags[index - 1].path })
+        this.clickMenu(this.tags[index - 1].menu)
       }
       this.tags.splice(index, 1)
     },
