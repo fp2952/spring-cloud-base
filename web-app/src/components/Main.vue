@@ -6,13 +6,13 @@
       <el-row  type="flex" justify="space-between">
         <el-col :span="2" style="text-align: center">基础框架</el-col>
         <el-col :span="4" class="main-dropdown">
-          <img src="../assets/logo.png" class="main-avatar" />
+          <img src="../assets/img/account.png" class="main-avatar" />
           <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
               {{userInfo.userName}}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="info">个人信息</el-dropdown-item>
+              <el-dropdown-item command="modify">修改密码</el-dropdown-item>
               <el-dropdown-item command="logout">注销</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -60,11 +60,13 @@
         </el-footer>
       </el-container>
     </el-container>
+    <modify-password ref="modifyPassword"></modify-password>
   </el-container>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import ModifyPassword from './user/ModifyPassword.vue'
 
 var Menu = {
   template: '<el-menu-item v-if="module.subModules.length === 0" :index="module.modulePath" ' +
@@ -91,7 +93,8 @@ var Menu = {
 
 export default {
   components: {
-    'main-menu': Menu
+    'main-menu': Menu,
+    'modify-password': ModifyPassword
   },
   data () {
     return {
@@ -156,6 +159,8 @@ export default {
     handleCommand (command) {
       if (command === 'logout') {
         this.$auth.logout()
+      } else if (command === 'modify') {
+        this.$refs.modifyPassword.show(this.userInfo)
       }
     },
     clickTag (tag) {

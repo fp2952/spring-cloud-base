@@ -59,15 +59,15 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="是否操作">
+            <el-form-item label="是否菜单">
               <el-switch
                 v-model="form.isOperating"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
                 active-text="是"
                 inactive-text="否"
-                :active-value="1"
-                :inactive-value="0">
+                :active-value="0"
+                :inactive-value="1">
               </el-switch>
             </el-form-item>
           </el-col>

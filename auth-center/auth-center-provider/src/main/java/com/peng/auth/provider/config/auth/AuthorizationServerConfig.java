@@ -18,9 +18,14 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -52,10 +57,17 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return new JdbcTokenStore(dataSource);
     }
 
+
+    @Bean("jdbcClientDetailsService")
+    public JdbcClientDetailsService getJdbcClientDetailsService() {
+        return new JdbcClientDetailsService(dataSource);
+    }
+
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         // 使用JdbcClientDetailsService客户端详情服务
-        clients.withClientDetails(new JdbcClientDetailsService(dataSource));
+        clients.withClientDetails(getJdbcClientDetailsService());
     }
 
 
@@ -111,4 +123,5 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
     }
+
 }

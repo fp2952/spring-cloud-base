@@ -40,13 +40,17 @@ spring:
       database: 0
       host: 127.0.0.1
       port: 6379
+  jackson:
+      date-format: yyyy-MM-dd HH:mm:ss
+      time-zone: GMT+8
+      locale: zh_CN
 # 权限配置
 security:
   ignored: |
     /css/**,/js/**,/favicon.ico,/webjars/**,/images/**,
     /hystrix.stream/**,/info,/error,/health,/env,/metrics,/trace,/dump,
     /jolokia,/configprops,/activiti,/logfile,/refresh,/flyway,/liquibase,/loggers,
-    /user/name/**,/role/user/**,/menu/user/*
+    /user/name/**,/role/user/**,/menu/user/*,/client/all
   oauth2:
     resource:
       jwt:
@@ -57,10 +61,6 @@ security:
 mybatis:
   type-aliases-package: com.peng.main.api.mapper.model
   mapper-locations: classpath:mybatis/mapper/*.xml
-# mapper 配置
-mapper:
-  identity: select uuid()
-  before: true
 logging:
   file: logs/main-data.log
 server:

@@ -8,6 +8,9 @@ export default {
       // 授权获取token
       if (Url.getParam('code')) {
         Token.accessoken(Url.getParam('code'), next)
+      } else if (Url.getParam('logout') === 'yes') {
+        // 登出
+        Token.deleteToken()
       } else {
         // 判断是否登陆
         if (Token.isLogin()) {

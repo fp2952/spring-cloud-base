@@ -7,6 +7,7 @@ import com.peng.db.spring.boot.autoconfigure.controller.CrudController;
 import com.peng.main.api.mapper.model.OauthClientDetails;
 import com.peng.main.api.pojo.ResponseCode;
 import com.peng.main.api.pojo.request.OauthClientDetailsRequest;
+import com.peng.main.api.service.BaseClientRemoteService;
 import com.peng.main.provider.service.OauthClientDetailsService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ import java.util.List;
  * Created by fp295 on 2018/4/17.
  */
 @RestController
-public class OauthClientDetailsController extends CrudController<OauthClientDetails, OauthClientDetailsRequest>{
+public class OauthClientDetailsController extends CrudController<OauthClientDetails, OauthClientDetailsRequest> implements BaseClientRemoteService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -96,5 +97,19 @@ public class OauthClientDetailsController extends CrudController<OauthClientDeta
             return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage());
         }
         return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
+    }
+
+    @Override
+    public ResponseData<List<OauthClientDetails>> getAllClient() {
+        logger.debug("获取所有客户端应用");
+        List<OauthClientDetails> list;
+        try {
+            list = oauthClientDetailsService.selectAll();
+        } catch (Exception e) {
+            logger.error("获取所有客户端应用失败：" + e.getMessage());
+            e.printStackTrace();
+            return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
+        }
+        return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), list);
     }
 }

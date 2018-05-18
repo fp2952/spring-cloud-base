@@ -12,15 +12,15 @@
     body > .grid {
         height: 100%;
     }
-    .image {
-        margin-top: -100px;
-    }
     .ui.dimmer {
         background-color: #364150;
     }
     .title {
         font-size: 28px !important;
         font-weight: 400 !important;
+    }
+    .modal {
+        height: 300px;
     }
     .title span{
         font-size: 16px;
@@ -39,17 +39,20 @@
 </form>
 <div class="ui modal" id="modal">
     <div class="header title">授权中心
-        <a href="javascript:void(0)" onclick="changeUser()">[切换账号]</a>
-        <span>${userName} &nbsp;|&nbsp;&nbsp;</span></div>
+        <a href="${request.contextPath}/logout">
+            [退出]
+        </a>
+        <span>${userName} &nbsp;|&nbsp;&nbsp;</span>
+    </div>
     <div class="content">
         <p style="line-height: 2.5">
-            将允许应用 ${authorizationRequest.clientId} 拥有以下权限：<br>
-            <i class="user icon"></i>获取你的用户信息
+            客户端应用：<br>
+        <#list client as item>
+            <a href="<#if item.webServerRedirectUri??>${item.webServerRedirectUri}<#else>javascript:void(0)</#if>">
+                <i class="html5 icon"></i> ${item.name}
+            </a><br>
+        </#list>
         </p>
-    </div>
-    <div class="actions">
-        <div class="ui ok button" id="ok">允许</div>
-        <div class="ui cancel button" id="no">拒绝</div>
     </div>
 </div>
 </body>
@@ -57,28 +60,7 @@
 <script src="${request.contextPath}/webjars/Semantic-UI/2.2.10/semantic.min.js" ></script>
 <script>
     $("#modal").modal({closable: false}).modal('show')
-    $("#ok").click(function () {
-        $("#approval").val("true");
-        $("#approveOrDeny").attr("name", "authorize").val("Authorize");
-        $("#form").submit();
-    })
-
-    $("#no").click(function () {
-        $("#approval").val("false");
-        $("#approveOrDeny").attr("name", "deny").val("Deny");
-        $("#scope").val("false");
-        $("#form").submit();
-    })
-    function changeUser() {
-        const getUrlParameters = url =>
-        url.match(/([^?=&]+)(=([^&]*))/g).reduce(
-                (a, v) => (a[v.slice(0, v.indexOf('='))] = v.slice(v.indexOf('=') + 1), a), {});
-        var url = getUrlParameters(window.location.href)['redirect_uri']
-        if (url.indexOf('?') == -1) {
-            url += '?logout=yes'
-        } else {
-            url += '&logout=yes'
-        }
+    function logout() {
         window.location.replace(url)
     }
 </script>

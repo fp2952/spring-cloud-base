@@ -7,7 +7,7 @@
 </head>
 <style type="text/css">
     body {
-        background-color: #DADADA;
+        background-color: #364150;
     }
     body > .grid {
         height: 100%;
@@ -17,32 +17,41 @@
     }
     .column {
         max-width: 450px;
+        height: 600px;
+    }
+    .title {
+        color: #32c5d2;
+        margin-bottom: 25px;
+        margin-top: 15px !important;
+        font-size: 28px;
+        font-weight: 400;
+    }
+    .item {
+        height: 60px;
+    }
+    input {
+        height: 45px;
     }
 </style>
 <body>
 <div class="ui middle aligned center aligned grid">
     <div class="column">
-        <h2 class="ui teal image header">
-            <img src="images/logo.png" class="image">
-            <div class="content">
-                登录到账号
-            </div>
-        </h2>
-        <form id="form" class="ui large form" action="login" method="post">
+        <form id="form" class="ui large form" action="login" method="post" style="border: 0">
             <div class="ui stacked segment">
-                <div class="field">
+                <h3 class="title"> 授权中心 </h3>
+                <div class="field item">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
                         <input id="username" name="username" placeholder="邮箱地址">
                     </div>
                 </div>
-                <div class="field">
+                <div class="field item">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
                         <input type="password" id="password" name="password" placeholder="密码">
                     </div>
                 </div>
-                <div id="submit" class="ui fluid large teal submit button">登录</div>
+                <div id="submit" class="ui fluid large teal submit button" style="margin-bottom: 20px; background-color: #32c5d2">登录</div>
             </div>
 
             <div class="ui error message"></div>
