@@ -1,0 +1,81 @@
+version: '3'
+services:
+  consul:
+    image: consul:0.7.3
+    restart: always
+    ports:
+      - "8500:8500"
+  auth-center:
+    image: auth-center-provider
+    restart: always
+    ports:
+      - '21001:21001'
+    depends_on:
+      - 'consul'
+      - 'mysql'
+      - 'redis'
+    command: ['./wait-for-it.sh', 'mysql:3306', '-', 'python', 'app.py']
+    environment:
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+  api-gateway:
+    image: api-gateway
+    restart: always
+    ports:
+      - '21000:21000'
+    depends_on:
+      - 'consul'
+      - 'auth-center'
+    command: ['./wait-for-it.sh', 'auth-center:21001', '-', 'python', 'app.py']
+    environment:
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - AUTH_CENTER_HOST=auth-center
+      - AUTH_CENTER_PORT=21001
+  main-data:
+    image: main-data-provider
+    restart: always
+    ports:
+      - '21003:21003'
+    depends_on:
+      - 'consul'
+      - 'auth-center'
+      - 'mysql'
+      - 'redis'
+    command: ['./wait-for-it.sh', 'auth-center:21001', '-', 'python', 'app.py']
+    environment:
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - AUTH_CENTER_HOST=auth-center
+      - AUTH_CENTER_PORT=21001
+  mysql:
+    build: ./mysql
+    ports:
+      - '3306:3306'
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - '6379:6379'
+  web-app:
+    image: web-app
+    ports:
+        - '8080:8080'
+    depends_on:
+        - 'auth-center'
+        - 'api-gateway'
+    environment:
+        - AJAX_HOST=api-gateway
+        - AJAX_PORT=21000
+        - BASE_HOST=web-app
+        - BASE_PORT=8080
+        - AUTH_HOST=auth-center
+        - AUTH_PORT='21001/auth'

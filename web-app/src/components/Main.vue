@@ -4,7 +4,7 @@
     <el-header class="main-top">
       <!-- 顶栏 -->
       <el-row  type="flex" justify="space-between">
-        <el-col :span="2" style="text-align: center">基础框架</el-col>
+        <el-col :span="2" style="text-align: center">基础应用</el-col>
         <el-col :span="4" class="main-dropdown">
           <img src="../assets/img/account.png" class="main-avatar" />
           <el-dropdown @command="handleCommand">

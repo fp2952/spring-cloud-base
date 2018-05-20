@@ -2,7 +2,7 @@
 spring:
   datasource:
     druid:
-      url: jdbc:mysql://localhost:3306/main-data?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/main-data?useUnicode=true&characterEncoding=UTF-8&useSSL=false
       username: fangp
       password: "000000"
       driver-class-name: com.mysql.jdbc.Driver
@@ -30,20 +30,16 @@ spring:
         login-password: "000000"
   cloud:
       consul:
-        host: 127.0.0.1
-        port: 8500
+        host: ${CONSUL_HOST:localhost}
+        port: ${CONSUL_PORT:8500}
         discovery:
           prefer-ip-address: true
   application:
       name: main-data
   redis:
       database: 0
-      host: 127.0.0.1
-      port: 6379
-  jackson:
-      date-format: yyyy-MM-dd HH:mm:ss
-      time-zone: GMT+8
-      locale: zh_CN
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 # 权限配置
 security:
   ignored: |
@@ -54,7 +50,7 @@ security:
   oauth2:
     resource:
       jwt:
-        key-uri: http://127.0.0.1:21001/auth/oauth/token_key
+        key-uri: http://${AUTH_CENTER_HOST:localhost}:${AUTH_CENTER_PORT:21001}/auth/oauth/token_key
       id: ${spring.application.name}
       serviceId: ${spring.application.name}
 # mybatis 配置

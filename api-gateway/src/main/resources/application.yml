@@ -1,8 +1,8 @@
 spring:
   cloud:
     consul:
-      host: 127.0.0.1
-      port: 8500
+      host: ${CONSUL_HOST:localhost}
+      port: ${CONSUL_PORT:8500}
       discovery:
         prefer-ip-address: true
   application:
@@ -26,7 +26,7 @@ security:
   oauth2:
     resource:
       jwt:
-        key-uri: http://127.0.0.1:21001/auth/oauth/token_key
+        key-uri: http://${AUTH_CENTER_HOST:localhost}:${AUTH_CENTER_PORT:21001}/auth/oauth/token_key
       id: ${spring.application.name}
       serviceId: ${spring.application.name}
 management:

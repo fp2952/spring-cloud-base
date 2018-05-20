@@ -2,20 +2,17 @@ package com.peng.auth.provider.config.web;
 
 import com.peng.common.pojo.ResponseData;
 import com.peng.main.api.pojo.ResponseCode;
-import com.peng.main.api.service.BaseClientRemoteService;
 import com.peng.main.client.BaseClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;

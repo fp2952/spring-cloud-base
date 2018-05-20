@@ -10,8 +10,8 @@ server:
 spring:
   cloud:
     consul:
-      host: 127.0.0.1
-      port: 8500
+      host: ${CONSUL_HOST:localhost}
+      port: ${CONSUL_PORT:8500}
       discovery:
         prefer-ip-address: true
         health-check-path: ${server.context-path}/health
@@ -20,11 +20,11 @@ spring:
     name: auth-center
   redis:
     database: 0
-    host: 127.0.0.1
-    port: 6379
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
   datasource:
     druid:
-      url: jdbc:mysql://127.0.0.1:3306/main-data?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/main-data?useUnicode=true&characterEncoding=UTF-8&useSSL=false
       username: fangp
       password: "000000"
       driver-class-name: com.mysql.jdbc.Driver
