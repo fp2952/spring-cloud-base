@@ -42,7 +42,7 @@
                 <div class="field item">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
-                        <input id="username" name="username" placeholder="邮箱地址">
+                        <input id="username" name="username" placeholder="用户名">
                     </div>
                 </div>
                 <div class="field item">

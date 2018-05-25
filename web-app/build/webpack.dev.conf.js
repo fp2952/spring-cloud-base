@@ -12,6 +12,9 @@ const portfinder = require('portfinder')
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
+const AUTH_URL = process.env.AUTH_URL || 'http://127.0.0.1:18001/auth'
+const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:8080'
+const SERVER_URL = process.env.SERVER_URL || 'http://127.0.0.1:18000'
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -46,7 +49,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': require('../config/dev.env')
+      'process.env': require('../config/dev.env'),
+      'process.env.AUTH_URL': JSON.stringify(AUTH_URL),
+      'process.env.BASE_URL': JSON.stringify(BASE_URL),
+      'process.env.SERVER_URL': JSON.stringify(SERVER_URL)
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.

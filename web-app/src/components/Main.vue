@@ -49,7 +49,8 @@
           </el-row>
         </el-header>
         <!--content -->
-        <el-main class="main-content">
+        <el-main class="main-content" v-loading="mainLoading"
+                 element-loading-text="加载中">
           <router-view></router-view>
         </el-main>
         <!--footer-->

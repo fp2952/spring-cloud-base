@@ -35,7 +35,7 @@ export default {
       formRules: {
         roleName: [
           { required: true, message: '请输入角色名称', trigger: 'blur' },
-          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
+          { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
         ]
       },
       editRoleShow: false,

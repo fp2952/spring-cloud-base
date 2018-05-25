@@ -6,7 +6,7 @@ security:
     /oauth/deleteToken, /backReferer
 server:
   context-path: /auth
-  port: 21001
+  port: 18001
 spring:
   cloud:
     consul:

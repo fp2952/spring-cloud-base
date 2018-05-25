@@ -114,7 +114,7 @@ export default {
       formRules: {
         moduleName: [
           { required: true, message: '请输入模块名称', trigger: 'blur' },
-          { min: 6, max: 32, message: '长度在 6 到 32 个字符', trigger: 'blur' }
+          { min: 3, max: 32, message: '长度在 3 到 32 个字符', trigger: 'blur' }
         ],
         modulePath: [
           { required: true, message: '请输入模块路径', trigger: 'blur' },

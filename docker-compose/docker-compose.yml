@@ -9,7 +9,7 @@ services:
     image: auth-center-provider
     restart: always
     ports:
-      - '21001:21001'
+      - '18001:18001'
     depends_on:
       - 'consul'
       - 'mysql'
@@ -26,27 +26,27 @@ services:
     image: api-gateway
     restart: always
     ports:
-      - '21000:21000'
+      - '18000:18000'
     depends_on:
       - 'consul'
       - 'auth-center'
-    command: ['./wait-for-it.sh', 'auth-center:21001', '-', 'python', 'app.py']
+    command: ['./wait-for-it.sh', 'auth-center:18001', '-', 'python', 'app.py']
     environment:
       - CONSUL_HOST=consul
       - CONSUL_PORT=8500
       - AUTH_CENTER_HOST=auth-center
-      - AUTH_CENTER_PORT=21001
+      - AUTH_CENTER_PORT=18001
   main-data:
     image: main-data-provider
     restart: always
     ports:
-      - '21003:21003'
+      - '18002:18002'
     depends_on:
       - 'consul'
       - 'auth-center'
       - 'mysql'
       - 'redis'
-    command: ['./wait-for-it.sh', 'auth-center:21001', '-', 'python', 'app.py']
+    command: ['./wait-for-it.sh', 'auth-center:18001', '-', 'python', 'app.py']
     environment:
       - CONSUL_HOST=consul
       - CONSUL_PORT=8500
@@ -55,7 +55,7 @@ services:
       - MYSQL_HOST=mysql
       - MYSQL_PORT=3306
       - AUTH_CENTER_HOST=auth-center
-      - AUTH_CENTER_PORT=21001
+      - AUTH_CENTER_PORT=18001
   mysql:
     build: ./mysql
     ports:
@@ -65,17 +65,16 @@ services:
     restart: always
     ports:
       - '6379:6379'
-  web-app:
-    image: web-app
+  node-app:
+    image: node-app
     ports:
-        - '8080:8080'
+      - '8080:8080'
     depends_on:
-        - 'auth-center'
-        - 'api-gateway'
+      - 'auth-center'
+      - 'api-gateway'
     environment:
-        - AJAX_HOST=api-gateway
-        - AJAX_PORT=21000
-        - BASE_HOST=web-app
-        - BASE_PORT=8080
-        - AUTH_HOST=auth-center
-        - AUTH_PORT='21001/auth'
+      - HOST=node-app
+      - PORT=8080
+      - BASE_URL=http://192.168.99.100:8080
+      - SERVER_URL=http://192.168.99.100:18000
+      - AUTH_URL=http://192.168.99.100:18001/auth

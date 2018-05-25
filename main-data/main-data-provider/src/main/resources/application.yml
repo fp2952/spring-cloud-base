@@ -50,7 +50,7 @@ security:
   oauth2:
     resource:
       jwt:
-        key-uri: http://${AUTH_CENTER_HOST:localhost}:${AUTH_CENTER_PORT:21001}/auth/oauth/token_key
+        key-uri: http://${AUTH_CENTER_HOST:localhost}:${AUTH_CENTER_PORT:18001}/auth/oauth/token_key
       id: ${spring.application.name}
       serviceId: ${spring.application.name}
 # mybatis 配置
@@ -60,4 +60,4 @@ mybatis:
 logging:
   file: logs/main-data.log
 server:
-  port: 21003
+  port: 18002
