@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #   Use this script to test if a given TCP host/port are available
 
 cmdname=$(basename $0)
@@ -13,9 +13,9 @@ Usage:
     -h HOST | --host=HOST       Host or IP under test
     -p PORT | --port=PORT       TCP port under test
                                 Alternatively, you specify the host and port as host:port
-    -s | --strict               Only execute subcommand if the test succeeds
+    -s | --strict               Only execute subcommand if the test succeed
     -q | --quiet                Don't output any status messages
-    -t TIMEOUT | --timeout=TIMEOUT
+    -t TIMEOUT | --timeout=TIMEOU
                                 Timeout in seconds, zero for no timeout
     -- COMMAND ARGS             Execute command with args after the test finishes
 USAGE

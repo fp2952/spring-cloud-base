@@ -14,7 +14,8 @@ services:
       - 'consul'
       - 'mysql'
       - 'redis'
-    command: ['./wait-for-it.sh', 'mysql:3306', '-', 'python', 'app.py']
+    entrypoint: ./wait-for-it.sh consul:8500 -t 600 -- ./wait-for-it.sh mysql:3306 -t 600 --
+    command: java -Djava.security.egd=file:/dev/./urandom -jar /app.jar
     environment:
       - CONSUL_HOST=consul
       - CONSUL_PORT=8500
@@ -30,7 +31,8 @@ services:
     depends_on:
       - 'consul'
       - 'auth-center'
-    command: ['./wait-for-it.sh', 'auth-center:18001', '-', 'python', 'app.py']
+    entrypoint: ./wait-for-it.sh auth-center:18001 -t 600 --
+    command: java -Djava.security.egd=file:/dev/./urandom -jar /app.jar
     environment:
       - CONSUL_HOST=consul
       - CONSUL_PORT=8500
@@ -46,7 +48,8 @@ services:
       - 'auth-center'
       - 'mysql'
       - 'redis'
-    command: ['./wait-for-it.sh', 'auth-center:18001', '-', 'python', 'app.py']
+    entrypoint: ./wait-for-it.sh auth-center:18001 -t 600 --
+    command: java -Djava.security.egd=file:/dev/./urandom -jar /app.jar
     environment:
       - CONSUL_HOST=consul
       - CONSUL_PORT=8500
