@@ -127,20 +127,20 @@ docker-compose up [-d]
 
 ## Preview  
 * 登陆页：   
-![avatar](https://github.com/fp2952/spring-cloud-base/tree/master/doc/login.png)
+![avatar](http://112.74.60.248:8080/image/login.png)
   
 * 用户管理：  
-![avatar](https://github.com/fp2952/spring-cloud-base/tree/master/doc/user.png)
+![avatar](http://112.74.60.248:8080/image/user.png)
   
 * 角色管理：  
-![avatar](https://github.com/fp2952/spring-cloud-base/tree/master/doc/role.png)
+![avatar](http://112.74.60.248:8080/image/role.png)
   
 * 应用管理：  
-![avatar](https://github.com/fp2952/spring-cloud-base/tree/master/doc/client.png)
+![avatar](http://112.74.60.248:8080/image/client.png)
   
 * 系统管理：  
-![avatar](https://github.com/fp2952/spring-cloud-base/tree/master/doc/system.png)
+![avatar](http://112.74.60.248:8080/image/system.png)
   
 * 模块管理：  
-![avatar](https://github.com/fp2952/spring-cloud-base/tree/master/doc/module.png)
+![avatar](http://112.74.60.248:8080/image/module.png)
   
