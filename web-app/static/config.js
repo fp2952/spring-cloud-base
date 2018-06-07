@@ -10,13 +10,13 @@ window.serverconf = {
   appId: 'test',
   appSecret: 'test',
   production: {
-    baseUrl: 'http://192.168.99.100:8080',
-    authUrl: 'http://192.168.99.100:21001/auth',
-    baseURL: 'http://192.168.99.100:21000'
+    baseUrl: 'http://112.74.60.248:8080/demo',
+    authUrl: 'http://112.74.60.248:18001/auth',
+    baseURL: 'http://112.74.60.248:18000'
   },
   development: {
     baseUrl: 'http://127.0.0.1:8080',
-    authUrl: 'http://192.168.99.100:21001/auth',
-    baseURL: 'http://192.168.99.100:21000'
+    authUrl: 'http://192.168.99.100:18001/auth',
+    baseURL: 'http://192.168.99.100:18000'
   }
 }
