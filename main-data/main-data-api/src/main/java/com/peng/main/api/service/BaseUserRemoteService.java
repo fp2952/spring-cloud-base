@@ -19,4 +19,12 @@ public interface BaseUserRemoteService {
      */
     @RequestMapping(value = "/user/name/{userName}", method = RequestMethod.GET)
     ResponseData<BaseUser> getUserByUserName(@PathVariable("userName") String userName);
+
+    /**
+     * 根据电话号码查询用户
+     * @param phone
+     * @return
+     */
+    @RequestMapping(value = "/user/phone/{phone}", method = RequestMethod.GET)
+    ResponseData<BaseUser> getUserByPhone(@PathVariable("phone") String phone);
 }

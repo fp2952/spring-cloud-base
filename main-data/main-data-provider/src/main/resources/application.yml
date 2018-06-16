@@ -46,7 +46,7 @@ security:
     /css/**,/js/**,/favicon.ico,/webjars/**,/images/**,
     /hystrix.stream/**,/info,/error,/health,/env,/metrics,/trace,/dump,
     /jolokia,/configprops,/activiti,/logfile,/refresh,/flyway,/liquibase,/loggers,
-    /user/name/**,/role/user/**,/menu/user/*,/client/all
+    /user/name/**,/user/phone/**,/role/user/**,/menu/user/*,/client/all
   oauth2:
     resource:
       jwt:

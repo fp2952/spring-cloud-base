@@ -58,6 +58,17 @@
 import {DataMainApi, Status} from '../ApiConstant'
 export default {
   data () {
+    var self = this
+    var validatePhone = (rule, value, callback) => {
+      self.$http.get(`${DataMainApi}/user/validate/phone/${self.form.phone}`)
+        .then(res => {
+          if (res.data.code === Status.success) {
+            callback()
+          } else {
+            callback(new Error('手机号码已存在!'))
+          }
+        })
+    }
     return {
       form: {
         id: null,
@@ -71,7 +82,8 @@ export default {
       // 表单验证
       formRules: {
         phone: [
-          { len: 11, message: '手机号码格式错误', trigger: 'blur' }
+          { len: 11, message: '手机号码格式错误', trigger: 'blur' },
+          { validator: validatePhone, trigger: 'blur' }
         ]
       },
       editUserShow: false,

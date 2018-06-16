@@ -55,6 +55,23 @@ public class BaseUserController extends CrudController<BaseUser, BaseUserRequest
         return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), baseUser);
     }
 
+    /**
+     * 根据电话号码查询用户信息
+     * @param phone
+     * @return
+     */
+    @Override
+    public ResponseData<BaseUser> getUserByPhone(@PathVariable("phone") String phone) {
+        logger.debug("根据电话号码查询用户");
+        if(StringUtils.isEmpty(phone)){
+            return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
+        }
+        BaseUser baseUser = new BaseUser();
+        baseUser.setPhone(phone);
+        baseUser = baseUserService.selectOne(baseUser);
+        return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), baseUser);
+    }
+
     @PostMapping("/user/table")
     @Override
     protected ResponseData<TableData<BaseUser>> queryRecord(@RequestBody BaseUserRequest query) {
@@ -174,6 +191,18 @@ public class BaseUserController extends CrudController<BaseUser, BaseUserRequest
         logger.debug("校验用户名是否存在");
         BaseUser baseUser = new BaseUser();
         baseUser.setUserName(userName);
+        baseUser = baseUserService.selectOne(baseUser);
+        if(baseUser == null) {
+            return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage());
+        }
+        return new ResponseData<>(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage());
+    }
+
+    @GetMapping("/user/validate/phone/{phone}")
+    public ResponseData<BaseUser> validatePhone(@PathVariable("phone") String phone) {
+        logger.debug("校验手机号码是否存在");
+        BaseUser baseUser = new BaseUser();
+        baseUser.setPhone(phone);
         baseUser = baseUserService.selectOne(baseUser);
         if(baseUser == null) {
             return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage());

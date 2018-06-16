@@ -1,6 +1,7 @@
 package com.peng.auth.provider.service;
 
 import com.peng.auth.api.pojo.auth.BaseUserDetail;
+import com.peng.auth.provider.config.auth.filter.MyLoginAuthenticationFilter;
 import com.peng.common.pojo.ResponseData;
 import com.peng.main.api.mapper.model.BaseModuleResources;
 import com.peng.main.api.mapper.model.BaseRole;
@@ -44,15 +45,30 @@ public class BaseUserDetailService implements UserDetailsService {
     private RedisTemplate<String, BaseModuleResources> resourcesTemplate;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String var1) throws UsernameNotFoundException {
 
-        // 调用FeignClient查询用户
-        ResponseData<BaseUser> baseUserResponseData = baseUserService.getUserByUserName(username);
-        if(baseUserResponseData.getData() == null || !ResponseCode.SUCCESS.getCode().equals(baseUserResponseData.getCode())){
-            logger.error("找不到该用户，用户名：" + username);
-            throw new UsernameNotFoundException("找不到该用户，用户名：" + username);
+        BaseUser baseUser;
+        String[] parameter = var1.split(":");
+        // 手机验证码调用FeignClient根据电话号码查询用户
+        if(MyLoginAuthenticationFilter.SPRING_SECURITY_RESTFUL_TYPE_PHONE.equals(parameter[0])){
+            ResponseData<BaseUser> baseUserResponseData = baseUserService.getUserByPhone(parameter[1]);
+            if(baseUserResponseData.getData() == null || !ResponseCode.SUCCESS.getCode().equals(baseUserResponseData.getCode())){
+                logger.error("找不到该用户，手机号码：" + parameter[1]);
+                throw new UsernameNotFoundException("找不到该用户，手机号码：" + parameter[1]);
+            }
+            baseUser = baseUserResponseData.getData();
+        } else if(MyLoginAuthenticationFilter.SPRING_SECURITY_RESTFUL_TYPE_QR.equals(parameter[0])){
+            // 扫码登陆根据token从redis查询用户
+            baseUser = null;
+        } else {
+            // 账号密码登陆调用FeignClient根据用户名查询用户
+            ResponseData<BaseUser> baseUserResponseData = baseUserService.getUserByUserName(parameter[1]);
+            if(baseUserResponseData.getData() == null || !ResponseCode.SUCCESS.getCode().equals(baseUserResponseData.getCode())){
+                logger.error("找不到该用户，用户名：" + parameter[1]);
+                throw new UsernameNotFoundException("找不到该用户，用户名：" + parameter[1]);
+            }
+            baseUser = baseUserResponseData.getData();
         }
-        BaseUser baseUser = baseUserResponseData.getData();
 
         // 调用FeignClient查询角色
         ResponseData<List<BaseRole>> baseRoleListResponseData = baseRoleService.getRoleByUserId(baseUser.getId());

@@ -20,5 +20,10 @@ public interface BaseUserService extends BaseUserRemoteService {
         public ResponseData<BaseUser> getUserByUserName(@PathVariable("userName") String userName) {
             return new ResponseData<>(ResponseCode.ERROR.getCode(),ResponseCode.ERROR.getMessage());
         }
+
+        @Override
+        public ResponseData<BaseUser> getUserByPhone(@PathVariable("phone") String phone) {
+            return new ResponseData<>(ResponseCode.ERROR.getCode(),ResponseCode.ERROR.getMessage());
+        }
     }
 }

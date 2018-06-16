@@ -1,6 +1,9 @@
 package com.peng.auth.provider.config.auth;
 
 
+import com.peng.auth.provider.config.auth.filter.MyLoginAuthenticationFilter;
+import com.peng.auth.provider.config.auth.handler.MyLoginAuthSuccessHandler;
+import com.peng.auth.provider.config.auth.provider.MyAuthenticationProvider;
 import com.peng.auth.provider.service.BaseUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
@@ -12,6 +15,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.*;
 
 /**
  * Created by fp295 on 2018/4/15.
@@ -27,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http    // 配置登陆页/login并允许访问
+                .addFilterAt(getMyLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .formLogin().loginPage("/login").permitAll()
                 // 登出页
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/backReferer")
@@ -45,8 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 
-
-    @Bean
+    /*@Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         // 设置userDetailsService
@@ -56,5 +60,38 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 使用BCrypt进行密码的hash
         provider.setPasswordEncoder(new BCryptPasswordEncoder(6));
         return provider;
+    }*/
+
+    /**
+     * 自定义密码验证
+     * @return
+     */
+    @Bean
+    public MyAuthenticationProvider daoAuthenticationProvider(){
+        MyAuthenticationProvider provider = new MyAuthenticationProvider();
+        // 设置userDetailsService
+        provider.setUserDetailsService(baseUserDetailService);
+        // 禁止隐藏用户未找到异常
+        provider.setHideUserNotFoundExceptions(false);
+        // 使用BCrypt进行密码的hash
+        provider.setPasswordEncoder(new BCryptPasswordEncoder(6));
+        return provider;
+    }
+
+    /**
+     * 自定义登陆过滤器
+     * @return
+     */
+    @Bean
+    public MyLoginAuthenticationFilter getMyLoginAuthenticationFilter() {
+        MyLoginAuthenticationFilter filter = new MyLoginAuthenticationFilter();
+        try {
+            filter.setAuthenticationManager(this.authenticationManagerBean());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        filter.setAuthenticationSuccessHandler(new MyLoginAuthSuccessHandler());
+        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"));
+        return filter;
     }
 }

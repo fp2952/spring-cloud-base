@@ -7,13 +7,11 @@ Demo website：http://112.74.60.248:8080/   username: test  password: 123456
 ## Model
 图片待续  
   
-###  Main Model
+## 相关博文
 * consul 注册中心  
 * auth-center 授权中心  
 * api-gateway 网关  
 * main-data 基础数据模块  
-  
-### Common Model  
 * common  
 * db-spring-boot-starter   
 * auth-spring-boot-starter  
