@@ -1,30 +1,30 @@
 # spring-cloud-base
 微服务基础框架，基于 SpringCloud 及 SpringBoot 开发。 使用 Oauth2 统一授权、认证, Oauth示例客户端使用 Vue 开发，具有用户管理、 资源管理、 角色管理等模块，后端包括授权中心、 基础数据中心（资源服务器）等应用，可作为微服务快速开发脚手架。  可通过 docker 快速构建部署。
   
-Demo website：http://112.74.60.248:8080/   username: test  password: 123456  
+Demo website：http://112.74.60.248:8080/  
+username: test  password: 123456  
+phone: 13100000000 verifyCode: 1000  
 
 
 ## Model
 图片待续  
   
-## 相关博文
-* consul 注册中心  
-* auth-center 授权中心  
-* api-gateway 网关  
-* main-data 基础数据模块  
-* common  
-* db-spring-boot-starter   
-* auth-spring-boot-starter  
-
-
-## Quick Start  
+* [api-gateway](https://github.com/fp2952/spring-cloud-base/tree/master/api-gateway)：api-gateway网关
+* [auth-center](https://github.com/fp2952/spring-cloud-base/tree/master/auth-center)：OAuth2授权中心
+* [common](https://github.com/fp2952/spring-cloud-base/tree/master/common)：通用脚手架
+* [config-git](https://github.com/fp2952/spring-cloud-base/tree/master/config-git)：git配置中心
+* [db-mybatis-pagehelper](https://github.com/fp2952/spring-cloud-base/tree/master/db-mybatis-pagehelper)：Mybatis通用Mapper、分页模块
+* [docker-compose](https://github.com/fp2952/spring-cloud-base/tree/master/docker-compose)：docker-compose编排
+* [main-data](https://github.com/fp2952/spring-cloud-base/tree/master/main-data)：基础数据模块
+* [web-app](https://github.com/fp2952/spring-cloud-base/tree/master/web-app)：前端vue项目 
+  
 ### 项目结构  
 ```
 ├─spring-cloud-base
 │  │  
 │  ├─api-gateway--------------网关负载中心
 │  │ 
-│  ├─auth-center-----------------服务授权中心
+│  ├─auth-center-----------------OAuth2服务授权中心
 │  │  ├─auth-center-api----------------授权中心公共模块
 │  │  ├─auth-center-provider----------------授权中心服务端
 │  │  ├─auth-spring-boot-autoconfigure----------------授权中心autoconfigure
@@ -50,6 +50,20 @@ Demo website：http://112.74.60.248:8080/   username: test  password: 123456
 │
 ```
 
+  
+
+## 相关博文
+* consul 注册中心  
+* [Spring Cloud OAuth2（一） 搭建授权服务](https://fp2952.github.io/jekyll/update/2016/05/13/Spring-cloud-oauth2.html)  
+* [Spring Cloud OAuth2（二） 扩展登陆方式：账户密码登陆、 手机验证码登陆、 二维码扫码登陆](https://fp2952.github.io/jekyll/update/2018/06/13/Spring-cloud-oauth2-login.html)  
+* api-gateway 网关  
+* main-data 基础数据模块  
+* common  
+* db-spring-boot-starter   
+* auth-spring-boot-starter  
+
+
+## Quick Start  
 ### 依赖环境    
 JDK8、 Maven、 Mysql、 Redis、Consul(暂不支持0.7.3以上)、 Nodejs、 Docker(可选)、 docker-compose(可选)  
 ### 运行步骤  

@@ -28,6 +28,7 @@ public class MyLoginAuthenticationFilter extends AbstractAuthenticationProcessin
     private static final String SPRING_SECURITY_RESTFUL_TYPE_KEY = "type";
     // 登陆终端：1：移动端登陆，包括微信公众号、小程序等；0：PC后台登陆
     private static final String SPRING_SECURITY_RESTFUL_MOBILE_KEY = "mobile";
+
     private static final String SPRING_SECURITY_RESTFUL_USERNAME_KEY = "username";
     private static final String SPRING_SECURITY_RESTFUL_PASSWORD_KEY = "password";
     private static final String SPRING_SECURITY_RESTFUL_PHONE_KEY = "phone";
@@ -69,7 +70,8 @@ public class MyLoginAuthenticationFilter extends AbstractAuthenticationProcessin
         else {
             principal = obtainParameter(request, SPRING_SECURITY_RESTFUL_USERNAME_KEY);
             credentials = obtainParameter(request, SPRING_SECURITY_RESTFUL_PASSWORD_KEY);
-
+            if(type == null)
+                type = SPRING_SECURITY_RESTFUL_TYPE_DEFAULT;
         }
         if (principal == null) {
             principal = "";
