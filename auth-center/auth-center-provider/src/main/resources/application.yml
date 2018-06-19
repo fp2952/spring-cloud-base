@@ -1,6 +1,6 @@
 security:
   ignored: |
-    /css/**,/js/**,/favicon.ico,/webjars/**,/images/**,
+    /css/**,/js/**,/favicon.ico,/webjars/**,/images/**,/static/**,
     /hystrix.stream/**,/info,/error,/health,/env,/metrics,/trace,/dump,
     /jolokia,/configprops,/activiti,/logfile,/refresh,/flyway,/liquibase,/loggers,/druid/**,
     /oauth/deleteToken, /backReferer
