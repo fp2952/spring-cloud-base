@@ -8,7 +8,7 @@
 <style type="text/css">
     body {
         /*background-color: #364150;*/
-        background-image: url("static/img/background.jpeg");
+        background-image: url("static/img/background.jpg");
         background-repeat: no-repeat;
         background-size: 100% 100%;
     }
@@ -62,14 +62,14 @@
                 <div class="field item">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
-                        <input id="username" name="username" placeholder="用户名">
+                        <input id="username" name="username" placeholder="用户名" value="test">
                         <input type="text" name="type" value="user" hidden>
                     </div>
                 </div>
                 <div class="field item" style="height: 80px">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
-                        <input type="password" id="password" name="password" placeholder="密码">
+                        <input type="password" id="password" name="password" placeholder="密码" value="123456">
                     </div>
                     <div class="other">忘记密码？试试 &nbsp;<a href="javascript:void(0);" onclick="change_yzm()"><i class="mobile icon"></i>验证码登陆</a>|<a><i class="qrcode icon"></i>扫码登陆</a></div>
                 </div>
@@ -85,14 +85,14 @@
                 <div class="field item">
                     <div class="ui left icon input">
                         <i class="mobile icon"></i>
-                        <input id="phone" name="phone" placeholder="手机号码">
+                        <input id="phone" name="phone" placeholder="手机号码" value="13100000000">
                         <input type="text" name="type" value="phone" hidden>
                     </div>
                 </div>
                 <div class="field item" style="height: 80px">
                     <div class="ui right action left icon input">
                         <i class="lock icon"></i>
-                        <input type="text" id="verifyCode" name="verifyCode" placeholder="验证码">
+                        <input type="text" id="verifyCode" name="verifyCode" placeholder="验证码" value="1000">
                         <button id="send_btn" type="button" class="ui basic active button" onclick="send_yzm()">点击获取验证码</button>
                     </div>
                     <div class="other">返回 &nbsp;<a href="javascript:void(0);" onclick="change_default()"><i class="user icon"></i>账号密码</a>| <a><i class="qrcode icon"></i>扫码登陆</a></div>

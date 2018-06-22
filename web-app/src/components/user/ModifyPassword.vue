@@ -1,24 +1,24 @@
 <template lang="html">
-  <el-dialog title="修改密码" :visible.sync="modifyPasswordShow" width="700px">
-    <el-form ref="modifyPasswordForm" :model="form" label-width="80px" :rules="formRules" >
+  <el-dialog :title="$t('constant.user.MODIFY_PASSWORD')" :visible.sync="modifyPasswordShow" width="700px">
+    <el-form ref="modifyPasswordForm" :model="form" label-width="120px" :rules="formRules" >
       <el-row>
         <el-col :span="24">
-          <el-form-item label="密码" prop="newPassword">
-            <el-input v-model="form.newPassword" placeholder="请输入新密码"></el-input>
+          <el-form-item :label="$t('constant.user.PASSWORD')" prop="newPassword">
+            <el-input v-model="form.newPassword" :placeholder="$t('constant.user.PASSWORD_NEW_PLACEHOLDER')"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="确认密码" prop="checkPassword">
-            <el-input v-model="form.checkPassword" placeholder="请再次输入密码"></el-input>
+          <el-form-item :label="$t('constant.user.CHECK_PASSWORD')" prop="checkPassword">
+            <el-input v-model="form.checkPassword" :placeholder="$t('constant.user.PASSWORD_AGAIN_PLACEHOLDER')"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="modifyPasswordShow = false">取 消</el-button>
-      <el-button type="primary" @click="modifyPassword" :loading="modifyPasswordLoading">确 定</el-button>
+      <el-button @click="modifyPasswordShow = false">{{$t('button.CANCEL')}}</el-button>
+      <el-button type="primary" @click="modifyPassword" :loading="modifyPasswordLoading">{{$t('button.SURE')}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -30,7 +30,7 @@ export default {
     var self = this
     var validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入密码'))
+        callback(new Error(self.$t('constant.user.PASSWORD_NEW_PLACEHOLDER')))
       } else {
         if (self.form.checkPassword !== '') {
           self.$refs.modifyPasswordForm.validateField('checkPassword')
@@ -40,14 +40,13 @@ export default {
     }
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'))
+        callback(new Error(self.$t('constant.user.PASSWORD_AGAIN_PLACEHOLDER')))
       } else if (value !== self.form.newPassword) {
-        callback(new Error('两次输入密码不一致!'))
+        callback(new Error(self.$t('constant.user.PASSWORD_NO_EQUALS_PLACEHOLDER')))
       } else {
         callback()
       }
     }
-
     return {
       form: {
         newPassword: null,
@@ -56,13 +55,13 @@ export default {
       // 表单验证
       formRules: {
         newPassword: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' },
+          { required: true, message: self.$t('constant.user.PASSWORD_NEW_PLACEHOLDER'), trigger: 'blur' },
+          { min: 6, max: 16, message: self.$t('constant.user.SEX_TO_16'), trigger: 'blur' },
           { validator: validatePass, trigger: 'blur' }
         ],
         checkPassword: [
-          { required: true, message: '请再次输入密码', trigger: 'blur' },
-          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' },
+          { required: true, message: self.$t('constant.user.PASSWORD_AGAIN_PLACEHOLDER'), trigger: 'blur' },
+          { min: 6, max: 16, message: self.$t('constant.user.SEX_TO_16'), trigger: 'blur' },
           { validator: validatePass2, trigger: 'blur' }
         ]
       },
@@ -90,10 +89,10 @@ export default {
           self.$http.post(`${DataMainApi}/user/password/${self.form.checkPassword}`, [self.user])
             .then(res => {
               if (res.data.code === Status.success) {
-                self.$notify.success('修改密码成功！')
+                self.$notify.success(self.$t('constant.user.MODIFY_PASSWORD_SUCCESS_NOTIFY'))
                 self.modifyPasswordShow = false
               } else {
-                self.$notify.error('修改密码失败！')
+                self.$notify.error(self.$t('constant.user.MODIFY_PASSWORD_FAILED_NOTIFY'))
               }
               self.modifyPasswordLoading = false
             })

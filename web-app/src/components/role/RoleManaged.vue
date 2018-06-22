@@ -3,26 +3,26 @@
   <!--查尋條件-->
     <el-row>
     <el-form :inline="true" :model="form" class="demo-form-inline">
-    <el-form-item label="角色编码">
-      <el-input v-model="form.roleCode" placeholder="角色编码"></el-input>
+    <el-form-item :label="$t('constant.role.ROLE_CODE')">
+      <el-input v-model="form.roleCode" :placeholder="$t('constant.role.ROLE_CODE')"></el-input>
     </el-form-item>
-    <el-form-item label="角色名称">
-      <el-input v-model="form.roleName" placeholder="角色名称"></el-input>
+    <el-form-item :label="$t('constant.role.ROLE_NAME')">
+      <el-input v-model="form.roleName" :placeholder="$t('constant.role.ROLE_NAME')"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="query">查询</el-button>
+      <el-button type="primary" @click="query">{{$t('button.SEARCH')}}</el-button>
     </el-form-item>
     </el-form>
     </el-row>
     <el-row style="margin-bottom: 20px">
-    <el-button type="primary" icon="el-icon-add" @click="showAddDialog">新增</el-button>
-    <el-button type="danger" icon="el-icon-delete" @click="showDeleteDialog">删除</el-button>
+    <el-button type="primary" icon="el-icon-add" @click="showAddDialog">{{$t('button.ADD')}}</el-button>
+    <el-button type="danger" icon="el-icon-delete" @click="showDeleteDialog">{{$t('button.DELETE')}}</el-button>
     </el-row>
 
     <el-table
       :data="tableData"
       v-loading="tableLoading"
-      element-loading-text="加载中"
+      :element-loading-text="$t('message.LOADING')"
       @selection-change="handleSelectionChange"
       style="width: 100%; margin-top: 10px">
        <el-table-column
@@ -31,21 +31,21 @@
       </el-table-column>
       <el-table-column
         prop="roleCode"
-        label="角色编码"
+        :label="$t('constant.role.ROLE_CODE')"
         >
       </el-table-column>
       <el-table-column
         prop="roleName"
-        label="角色名称"
+        :label="$t('constant.role.ROLE_NAME')"
         >
       </el-table-column>
       <el-table-column
         fixed="right"
-        label="操作"
+        :label="$t('constant.OPERATE')"
         width="300">
         <template slot-scope="scope" >
-          <el-button size="small" @click="showEditDialog(scope.row)">编辑</el-button>
-          <el-button type="warning" size="small" @click="showRoleSetDialog(scope.row)">权限配置</el-button>
+          <el-button size="small" @click="showEditDialog(scope.row)">{{$t('button.EDIT')}}</el-button>
+          <el-button type="warning" size="small" @click="showRoleSetDialog(scope.row)">{{$t('button.AUTHORITY_SET')}}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -65,13 +65,13 @@
     </el-row>
     <!--删除角色-->
     <el-dialog
-      title="提示"
+      :title="$t('constant.HINT')"
       :visible.sync="deleteDialogShow"
       width="30%">
-      <span>确定删除选中角色？</span>
+      <span>{{$t('constant.role.DELETE_ROLE_HINT')}}</span>
       <span slot="footer" class="dialog-footer">
-            <el-button @click="deleteDialogShow = false">取 消</el-button>
-            <el-button type="danger" :loading="deleteDialogLoading" @click="deleteDialogClick">确 定</el-button>
+            <el-button @click="deleteDialogShow = false">{{$t('button.CANCEL')}}</el-button>
+            <el-button type="danger" :loading="deleteDialogLoading" @click="deleteDialogClick">{{$t('button.SURE')}}</el-button>
           </span>
     </el-dialog>
     <!--新增角色表单-->
@@ -170,11 +170,11 @@ export default {
         this.$http.delete(`${DataMainApi}/role`, {data: self.selectData})
           .then(res => {
             if (res.data.code === Status.success) {
-              self.$notify.success('删除角色成功')
+              self.$notify.success(self.$t('constant.role.DELETE_ROLE_SUCCESS_NOTIFY'))
               self.loadTable()
               self.deleteDialogShow = false
             } else {
-              self.$notify.error('删除角色失败')
+              self.$notify.error(self.$t('constant.role.DELETE_ROLE_FAILED_NOTIFY'))
             }
             self.deleteDialogLoading = false
           })
@@ -182,7 +182,7 @@ export default {
             self.deleteDialogLoading = false
           })
       } else {
-        self.$notify.warning('请选择需要删除的角色')
+        self.$notify.warning(self.$t('constant.role.DELETE_ROLE_WARN_NOTIFY'))
         self.deleteDialogShow = false
       }
     }

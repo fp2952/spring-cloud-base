@@ -1,5 +1,5 @@
 <template lang="html">
-  <el-dialog title="权限配置" :visible.sync="roleSettingShow">
+  <el-dialog :title="$t('constant.role.AUTHORITY_SET')" :visible.sync="roleSettingShow">
    <el-tree
       :data="modules"
       show-checkbox
@@ -10,8 +10,8 @@
       :props="treeProps">
     </el-tree>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="roleSettingShow = false">取 消</el-button>
-      <el-button type="primary" @click="saveRoleSetting" :loading="roleSettingLoading">确 定</el-button>
+      <el-button @click="roleSettingShow = false">{{$t('button.CANCEL')}}</el-button>
+      <el-button type="primary" @click="saveRoleSetting" :loading="roleSettingLoading">{{$t('button.SURE')}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -75,10 +75,10 @@ export default {
         })))
         .then(res => {
           if (res.data.code === Status.success) {
-            self.$notify.success('保存授权模块成功！')
+            self.$notify.success(self.$t('constant.role.SAVE_MODULE_AUTH_SUCCESS_NOTIFY'))
             self.roleSettingShow = false
           } else {
-            self.$notify.error('保存授权模块失败！')
+            self.$notify.error(self.$t('constant.role.SAVE_MODULE_AUTH_FAILED_NOTIFY'))
           }
           self.roleSettingLoading = false
         })

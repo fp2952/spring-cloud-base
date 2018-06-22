@@ -1,5 +1,6 @@
 import Axios from 'axios'
 import VueAxios from 'vue-axios'
+import I18n from '../plugin/i18n'
 
 export default {
   init (Vue) {
@@ -30,13 +31,13 @@ export default {
       if (error && error.response) {
         switch (error.response.status) {
           case 403:
-            Vue.prototype.$notify.error('无访问权限')
+            Vue.prototype.$notify.error(I18n.messages[I18n.locale].message.DO_NOT_PERMISSION)
             break
           default:
-            Vue.prototype.$notify.error('访问服务器错误')
+            Vue.prototype.$notify.error(I18n.messages[I18n.locale].message.SERVER_ERROR)
         }
       } else {
-        Vue.prototype.$notify.error('访问服务器错误')
+        Vue.prototype.$notify.error(I18n.messages[I18n.locale].message.SERVER_ERROR)
       }
       console.error(error)
       // Do something with response error

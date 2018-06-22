@@ -1,47 +1,47 @@
 <template lang="html">
-  <el-dialog title="新增应用" :visible.sync="addAppShow">
-    <el-form ref="appAddForm" :model="form" label-width="100px" :rules="formRules" :inline="true">
+  <el-dialog :title="$t('constant.client.ADD_CLIENT')" :visible.sync="addAppShow">
+    <el-form ref="appAddForm" :model="form" label-width="200px" :rules="formRules" :inline="true">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="应用id" prop="clientId">
-            <el-input v-model="form.clientId" placeholder="请输入应用id"></el-input>
+          <el-form-item :label="$t('constant.client.CLIENT_ID')" prop="clientId">
+            <el-input v-model="form.clientId" :placeholder="$t('constant.client.CLIENT_ID_PLACEHOLDER')"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="应用名称" prop="name">
-            <el-input v-model="form.name" placeholder="请输入应用名称"></el-input>
+          <el-form-item :label="$t('constant.client.CLIENT_NAME')" prop="name">
+            <el-input v-model="form.name" :placeholder="$t('constant.client.CLIENT_NAME_PLACEHOLDER')"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="应用secret" prop="clientSecret">
-            <el-input v-model="form.clientSecret" placeholder="请输入应用secret"></el-input>
+          <el-form-item :label="$t('constant.client.CLIENT_SECRET')" prop="clientSecret">
+            <el-input v-model="form.clientSecret" :placeholder="$t('constant.client.CLIENT_SECRET_PLACEHOLDER')"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-            <el-form-item label="token有效期">
+            <el-form-item :label="$t('constant.client.TOKEN_VALIDITY')">
               <el-input-number v-model="form.accessTokenValidity" :min="10000" ></el-input-number>
             </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-            <el-form-item label="静默模式">
+            <el-form-item :label="$t('constant.client.AUTO_APPROVE')">
               <el-switch
                 v-model="form.autoapprove"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
-                active-text="启用"
-                inactive-text="禁用"
+                :active-text="$t('constant.TRUE')"
+                :inactive-text="$t('constant.FALSE')"
                 active-value="true"
                 inactive-value="false">
               </el-switch>
             </el-form-item>
         </el-col>
         <el-col :span="12">
-            <el-form-item label="授权模式">
-              <el-select v-model="authorizedGrantTypes" multiple placeholder="请选择">
+            <el-form-item :label="$t('constant.client.AUTHORIZED_GRANT_TYPE')">
+              <el-select v-model="authorizedGrantTypes" multiple :placeholder="$t('constant.client.PLACEHOLDER')">
                 <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -54,8 +54,8 @@
       </el-row>
    </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="addAppShow = false">取 消</el-button>
-      <el-button type="primary" @click="saveApp" :loading="addAppLoading">确 定</el-button>
+      <el-button @click="addAppShow = false">{{$t('button.CANCEL')}}</el-button>
+      <el-button type="primary" @click="saveApp" :loading="addAppLoading">{{$t('button.SURE')}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -71,7 +71,7 @@ export default {
           if (res.data.code === Status.success) {
             callback()
           } else {
-            callback(new Error('应用id已存在!'))
+            callback(new Error(self.$t('constant.client.CLIENT_ID_EXIST_NOTIFY')))
           }
         })
     }
@@ -87,17 +87,17 @@ export default {
       // 表单验证
       formRules: {
         clientId: [
-          { required: true, message: '请输入应用id', trigger: 'blur' },
-          { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' },
+          { required: true, message: self.$t('constant.client.CLIENT_ID_PLACEHOLDER'), trigger: 'blur' },
+          { min: 3, max: 16, message: self.$t('constant.client.THREE_TO_16'), trigger: 'blur' },
           { validator: validateAppCode, trigger: 'blur' }
         ],
         name: [
-          { required: true, message: '请输入应用名称', trigger: 'blur' },
-          { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
+          { required: true, message: self.$t('constant.client.CLIENT_NAME_PLACEHOLDER'), trigger: 'blur' },
+          { min: 3, max: 16, message: self.$t('constant.client.THREE_TO_16'), trigger: 'blur' }
         ],
         clientSecret: [
-          { required: true, message: '请输入应用secret', trigger: 'blur' },
-          { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
+          { required: true, message: self.$t('constant.client.CLIENT_SECRET_PLACEHOLDER'), trigger: 'blur' },
+          { min: 3, max: 16, message: self.$t('constant.client.THREE_TO_16'), trigger: 'blur' }
         ]
       },
       addAppShow: false,
@@ -105,23 +105,23 @@ export default {
       authorizedGrantTypes: ['authorization_code'],
       options: [
         {
-          label: '授权码',
+          label: self.$t('constant.client.AUTHORIZED_CODE'),
           value: 'authorization_code'
         },
         {
-          label: '刷新',
+          label: self.$t('constant.client.REFRESH_TOKEN'),
           value: 'refresh_token'
         },
         {
-          label: '密码',
+          label: self.$t('constant.client.PASSWORD'),
           value: 'password'
         },
         {
-          label: '简化',
+          label: self.$t('constant.client.IMPLICIT'),
           value: 'implicit'
         },
         {
-          label: '客户端',
+          label: self.$t('constant.client.CLIENT_CREDENTIALS'),
           value: 'client_credentials'
         }
       ]
@@ -151,12 +151,12 @@ export default {
           self.$http.post(`${DataMainApi}/client`, self.form)
             .then(res => {
               if (res.data.code === Status.success) {
-                self.$notify.success('保存应用成功！')
+                self.$notify.success(self.$t('constant.client.SAVE_CLIENT_SUCCESS_NOTIFY'))
                 self.addAppShow = false
                 // 触发事件
                 self.$emit('success')
               } else {
-                self.$notify.error('保存应用失败！')
+                self.$notify.error(self.$t('constant.client.SAVE_CLIENT_FAILED_NOTIFY'))
               }
               self.addAppLoading = false
             })

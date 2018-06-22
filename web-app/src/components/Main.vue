@@ -3,17 +3,26 @@
     <!--header -->
     <el-header class="main-top">
       <!-- 顶栏 -->
-      <el-row  type="flex" justify="space-between">
-        <el-col :span="2" style="text-align: center">基础应用</el-col>
-        <el-col :span="4" class="main-dropdown">
+      <el-row  type="flex" justify="space-between" style="top: 50%;margin-top: -13px;">
+        <el-col :span="2" style="text-align: center">{{$t('message.title')}}</el-col>
+        <el-col :span="6" class="main-dropdown">
+          <el-dropdown @command="handleTranslate" style="margin-right: 30px">
+            <span class="el-dropdown-link">
+              {{lang}}<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="Chinese">中文</el-dropdown-item>
+              <el-dropdown-item command="English">English</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
           <img src="../assets/img/account.png" class="main-avatar" />
           <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
               {{userInfo.userName}}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="modify">修改密码</el-dropdown-item>
-              <el-dropdown-item command="logout">注销</el-dropdown-item>
+              <el-dropdown-item command="modify">{{$t('message.MODIFY_PASSWORD')}}</el-dropdown-item>
+              <el-dropdown-item command="logout">{{$t('message.LOGOUT')}}</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-col>
@@ -37,12 +46,12 @@
             <el-col :span="24">
               <el-breadcrumb separator="/" class="main-breadcrumb">
                 <el-breadcrumb-item v-for="item in breadcrumb" :to="item.path ? { path: item.path } : null" :key="item.path">
-                  {{ item.title }}
+                  {{$t(item.code)}}
                 </el-breadcrumb-item>
               </el-breadcrumb>
               <div class="main-tags">
                 <el-tag size="medium" :key="index" v-for="(tag, index) in tags" @close="handleClose(index,tag)" closable :type="tag.active == false ? 'info' : null" style="margin-right: 10px;">
-                  <span @click="clickTag(tag)">{{tag.title}}</span>
+                  <span @click="clickTag(tag)">{{$t(tag.code)}}</span>
                 </el-tag>
               </div>
             </el-col>
@@ -50,7 +59,7 @@
         </el-header>
         <!--content -->
         <el-main class="main-content" v-loading="mainLoading"
-                 element-loading-text="加载中">
+                 :element-loading-text="$t('message.LOADING')">
           <router-view></router-view>
         </el-main>
         <!--footer-->
@@ -71,15 +80,15 @@ import ModifyPassword from './user/ModifyPassword.vue'
 
 var Menu = {
   template: '<el-menu-item v-if="module.subModules.length === 0" :index="module.modulePath" ' +
-  ':title="module.moduleName" :parent="module.parentId" :key="module.id" :disabled="module.active !== 1" @click="click">' +
+  ':title="module.moduleName" :parent="module.parentId" :key="module.id" :disabled="module.active !== 1" :code="module.moduleCode" @click="click">' +
   '<i :class="module.moduleIcon ? module.moduleIcon : \'el-icon-star-off\'"></i>' +
-  '<span slot="title">{{ module.moduleName }}</span>' +
+  '<span slot="title">{{$t(module.moduleCode)}}</span>' +
   '</el-menu-item>' +
-  '<el-submenu v-else-if="module.subModules.length > 0" :title="module.moduleName" :parent="module.parentId" ' +
+  '<el-submenu v-else-if="module.subModules.length > 0" :title="module.moduleName" :parent="module.parentId" :code="module.moduleCode"' +
   ':index="module.modulePath" :key="module.id">' +
   '<template slot="title">' +
   '<i :class="module.moduleIcon ? module.moduleIcon : \'el-icon-star-off\'"></i>' +
-  '<span slot="title">{{ module.moduleName }}</span>' +
+  '<span slot="title">{{$t(module.moduleCode)}}</span>' +
   '</template>' +
   '<main-menu v-for="item in module.subModules" :module="item" :key="item.id" @click="click"></main-menu>' +
   '</el-submenu>',
@@ -101,8 +110,9 @@ export default {
     return {
       tags: [],
       tagLenght: 15,
-      breadcrumb: [{ title: '首页', path: '/' }],
-      isCollapse: false
+      breadcrumb: [{ title: '首页', code: 'HOME_PAGE', path: '/' }],
+      isCollapse: false,
+      lang: '中文'
     }
   },
   created () {
@@ -117,7 +127,7 @@ export default {
       if (!parent) {
         // 清空面包屑
         this.breadcrumb = []
-        this.breadcrumb.push({ title: menu.$attrs.title, path: menu.index })
+        this.breadcrumb.push({ title: menu.$attrs.title, code: menu.$attrs.code, path: menu.index })
         this.resetTags(menu.index)
         // 添加标签
         if (!this.checkTags(menu.index)) {
@@ -125,16 +135,16 @@ export default {
           if (this.tags.length === this.tagLenght) {
             this.tags.splice(0, 1)
           }
-          this.tags.push({ title: menu.$attrs.title, path: menu.index, active: true, menu: menu })
+          this.tags.push({ title: menu.$attrs.title, code: menu.$attrs.code, path: menu.index, active: true, menu: menu })
         }
       } else {
-        this.breadcrumb.push({ title: menu.$attrs.title, path: null })
+        this.breadcrumb.push({ title: menu.$attrs.title, code: menu.$attrs.code, path: null })
       }
       if (menu.$attrs.parent) {
         this.clickMenu(menu.$parent.$parent, true)
       } else {
         // 递归完毕
-        this.breadcrumb.push({ title: '首页', path: '/' })
+        this.breadcrumb.push({ title: '首页', code: 'HOME_PAGE', path: '/' })
         // 反向数组
         this.breadcrumb.reverse()
       }
@@ -164,6 +174,15 @@ export default {
         this.$refs.modifyPassword.show(this.userInfo)
       }
     },
+    handleTranslate (command) {
+      var self = this
+      if (command === 'Chinese') {
+        this.lang = '中文'
+      } else if (command === 'English') {
+        this.lang = 'English'
+      }
+      self.$i18n.locale = command
+    },
     clickTag (tag) {
       // 点击跳转到指定页面
       this.$router.push({ path: tag.path })
@@ -173,7 +192,7 @@ export default {
       // 如果已经没有标签页
       if (this.tags.length === 1) {
         this.$router.push({ path: '/' })
-        this.breadcrumb = [{ title: '首页', path: '/' }]
+        this.breadcrumb = [{ title: '首页', code: 'HOME_PAGE', path: '/' }]
         this.tags.splice(index, 1)
         return
       }

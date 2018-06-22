@@ -1,45 +1,45 @@
 <template lang="html">
-  <el-dialog title="编辑用户" :visible.sync="editUserShow">
-    <el-form ref="editUserForm" :model="form" label-width="80px" :rules="formRules" :inline="true">
+  <el-dialog :title="$t('constant.user.EDIT_USER')" :visible.sync="editUserShow">
+    <el-form ref="editUserForm" :model="form" label-width="100px" :rules="formRules" :inline="true">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="用户名">
+          <el-form-item :label="$t('constant.user.USERNAME')">
             <el-input v-model="form.userName" :disabled="true"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="密码">
+          <el-form-item :label="$t('constant.user.PASSWORD')">
             <el-input v-model="form.password" type="password" :disabled="true"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="手机号码" prop="phone">
+          <el-form-item :label="$t('constant.user.PHONE_NUMBER')" prop="phone">
             <el-input v-model="form.phone"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="年龄">
+          <el-form-item :label="$t('constant.user.AGE')">
             <el-input v-model="form.age"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="性别">
-            <el-radio v-model="form.gender" label="male">男</el-radio>
-            <el-radio v-model="form.gender" label="female">女</el-radio>
+          <el-form-item :label="$t('constant.user.GENDER')">
+            <el-radio v-model="form.gender" label="male">{{$t('constant.user.MALE')}}</el-radio>
+            <el-radio v-model="form.gender" label="female">{{$t('constant.user.FEMALE')}}</el-radio>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="是否启用">
+          <el-form-item :label="$t('constant.user.ACTIVE')">
             <el-switch
               v-model="form.active"
               active-color="#13ce66"
               inactive-color="#ff4949"
-              active-text="启用"
-              inactive-text="禁用"
+              :active-text="$t('constant.TRUE')"
+              :inactive-text="$t('constant.FALSE')"
               :active-value="1"
               :inactive-value="0">
             </el-switch>
@@ -48,8 +48,8 @@
       </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="editUserShow = false">取 消</el-button>
-      <el-button type="primary" @click="saveUser" :loading="editUserLoading">确 定</el-button>
+      <el-button @click="editUserShow = false">{{$t('button.CANCEL')}}</el-button>
+      <el-button type="primary" @click="saveUser" :loading="editUserLoading">{{$t('button.SURE')}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -65,7 +65,7 @@ export default {
           if (res.data.code === Status.success) {
             callback()
           } else {
-            callback(new Error('手机号码已存在!'))
+            callback(new Error(self.$t('constant.user.PHONE_EXIST_NOTIFY')))
           }
         })
     }
@@ -82,7 +82,7 @@ export default {
       // 表单验证
       formRules: {
         phone: [
-          { len: 11, message: '手机号码格式错误', trigger: 'blur' },
+          { len: 11, message: self.$t('constant.user.PHONE_NUMBER_FORMAT_WARN_NOTIFY'), trigger: 'blur' },
           { validator: validatePhone, trigger: 'blur' }
         ]
       },
@@ -115,12 +115,12 @@ export default {
           self.$http.put(`${DataMainApi}/user`, self.form)
             .then(res => {
               if (res.data.code === Status.success) {
-                self.$notify.success('编辑用户成功！')
+                self.$notify.success(self.$t('constant.user.EDIT_USER_SUCCESS_NOTIFY'))
                 self.editUserShow = false
                 // 触发事件
                 self.$emit('success')
               } else {
-                self.$notify.error('编辑用户失败！')
+                self.$notify.error(self.$t('constant.user.EDIT_USER_FAILED_NOTIFY'))
               }
               self.editUserLoading = false
             })

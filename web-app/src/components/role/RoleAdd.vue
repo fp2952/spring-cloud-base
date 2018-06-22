@@ -1,22 +1,22 @@
 <template lang="html">
-  <el-dialog title="新增角色" :visible.sync="addRoleShow">
-    <el-form ref="roleAddForm" :model="form" label-width="80px" :rules="formRules" :inline="true">
+  <el-dialog :title="$t('constant.role.ADD_ROLE')" :visible.sync="addRoleShow">
+    <el-form ref="roleAddForm" :model="form" label-width="100px" :rules="formRules" :inline="true">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="角色编码" prop="roleCode">
-            <el-input v-model="form.roleCode" placeholder="请输入角色编码"></el-input>
+          <el-form-item :label="$t('constant.role.ROLE_CODE')" prop="roleCode" :span="6">
+            <el-input v-model="form.roleCode" :placeholder="$t('constant.role.ROLE_CODE_PLACEHOLDER')"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="角色名称" prop="roleName">
-            <el-input v-model="form.roleName" placeholder="请输入角色名称"></el-input>
+          <el-form-item :label="$t('constant.role.ROLE_NAME')" prop="roleName">
+            <el-input v-model="form.roleName" :placeholder="$t('constant.role.ROLE_NAME_PLACEHOLDER')"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
    </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="addRoleShow = false">取 消</el-button>
-      <el-button type="primary" @click="saveRole" :loading="addRoleLoading">确 定</el-button>
+      <el-button @click="addRoleShow = false">{{$t('button.CANCEL')}}</el-button>
+      <el-button type="primary" @click="saveRole" :loading="addRoleLoading">{{$t('button.SURE')}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -32,7 +32,7 @@ export default {
           if (res.data.code === Status.success) {
             callback()
           } else {
-            callback(new Error('角色编码已存在!'))
+            callback(new Error(self.$t('constant.role.ROLE_CODE_EXIST_NOTIFY')))
           }
         })
     }
@@ -44,13 +44,13 @@ export default {
       // 表单验证
       formRules: {
         roleCode: [
-          { required: true, message: '请输入角色编码', trigger: 'blur' },
-          { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' },
+          { required: true, message: self.$t('constant.role.ROLE_CODE_PLACEHOLDER'), trigger: 'blur' },
+          { min: 3, max: 16, message: self.$t('constant.role.THREE_TO_16'), trigger: 'blur' },
           { validator: validateRoleCode, trigger: 'blur' }
         ],
         roleName: [
-          { required: true, message: '请输入角色名称', trigger: 'blur' },
-          { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
+          { required: true, message: self.$t('constant.role.ROLE_NAME_PLACEHOLDER'), trigger: 'blur' },
+          { min: 3, max: 16, message: self.$t('constant.role.THREE_TO_16'), trigger: 'blur' }
         ]
       },
       addRoleShow: false,
@@ -75,12 +75,12 @@ export default {
           self.$http.post(`${DataMainApi}/role`, self.form)
             .then(res => {
               if (res.data.code === Status.success) {
-                self.$notify.success('保存角色成功！')
+                self.$notify.success(self.$t('constant.role.SAVE_ROLE_SUCCESS_NOTIFY'))
                 self.addRoleShow = false
                 // 触发事件
                 self.$emit('success')
               } else {
-                self.$notify.error('保存角色失败！')
+                self.$notify.error(self.$t('constant.role.SAVE_ROLE_FAILED_NOTIFY'))
               }
               self.addRoleLoading = false
             })

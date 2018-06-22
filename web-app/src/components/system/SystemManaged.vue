@@ -3,26 +3,26 @@
   <!--查尋條件-->
     <el-row>
     <el-form :inline="true" :model="form" class="demo-form-inline">
-    <el-form-item label="系统项目名">
-      <el-input v-model="form.projectName" placeholder="系统项目名"></el-input>
+    <el-form-item :label="$t('constant.system.PROJECT_NAME')">
+      <el-input v-model="form.projectName" :placeholder="$t('constant.system.PROJECT_NAME')"></el-input>
     </el-form-item>
-    <el-form-item label="系统名称">
-      <el-input v-model="form.systemName" placeholder="系统名称"></el-input>
+    <el-form-item :label="$t('constant.system.SYSTEM_NAME')">
+      <el-input v-model="form.systemName" :placeholder="$t('constant.system.SYSTEM_NAME')"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="query">查询</el-button>
+      <el-button type="primary" @click="query">{{$t('button.SEARCH')}}</el-button>
     </el-form-item>
     </el-form>
     </el-row>
     <el-row style="margin-bottom: 20px">
-    <el-button type="primary" icon="el-icon-add" @click="showAddDialog">新增</el-button>
-    <el-button type="danger" icon="el-icon-delete" @click="showDeleteDialog">删除</el-button>
+    <el-button type="primary" icon="el-icon-add" @click="showAddDialog">{{$t('button.ADD')}}</el-button>
+    <el-button type="danger" icon="el-icon-delete" @click="showDeleteDialog">{{$t('button.DELETE')}}</el-button>
     </el-row>
 
     <el-table
       :data="tableData"
       v-loading="tableLoading"
-      element-loading-text="加载中"
+      :element-loading-text="$t('message.LOADING')"
       @selection-change="handleSelectionChange"
       style="width: 100%; margin-top: 10px">
        <el-table-column
@@ -31,28 +31,28 @@
       </el-table-column>
       <el-table-column
         prop="projectName"
-        label="系统项目名"
+        :label="$t('constant.system.PROJECT_NAME')"
         >
       </el-table-column>
       <el-table-column
         prop="systemName"
-        label="系统名称"
+        :label="$t('constant.system.SYSTEM_NAME')"
         >
       </el-table-column>
       <el-table-column
         prop="active"
-        label="是否启用">
+        :label="$t('constant.system.ACTIVE')">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.active === 0" type="danger">否</el-tag>
-          <el-tag v-else type="primary">是</el-tag>
+          <el-tag v-if="scope.row.active === 0" type="danger">{{$t('constant.FALSE')}}</el-tag>
+          <el-tag v-else type="primary">{{$t('constant.TRUE')}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
         fixed="right"
-        label="操作"
+        :label="$t('constant.OPERATE')"
         width="300">
         <template slot-scope="scope" >
-          <el-button size="small" @click="showEditDialog(scope.row)">编辑</el-button>
+          <el-button size="small" @click="showEditDialog(scope.row)">{{$t('button.EDIT')}}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,13 +72,13 @@
     </el-row>
     <!--删除系统-->
     <el-dialog
-      title="提示"
+      :title="$t('constant.HINT')"
       :visible.sync="deleteDialogShow"
       width="30%">
-      <span>确定删除选中系统？</span>
+      <span>{{$t('constant.system.DELETE_SYSTEM_HINT')}}</span>
       <span slot="footer" class="dialog-footer">
-            <el-button @click="deleteDialogShow = false">取 消</el-button>
-            <el-button type="danger" :loading="deleteDialogLoading" @click="deleteDialogClick">确 定</el-button>
+            <el-button @click="deleteDialogShow = false">{{$t('button.CANCEL')}}</el-button>
+            <el-button type="danger" :loading="deleteDialogLoading" @click="deleteDialogClick">{{$t('button.SURE')}}</el-button>
           </span>
     </el-dialog>
     <!--新增系统表单-->
@@ -170,11 +170,11 @@ export default {
         this.$http.delete(`${DataMainApi}/system`, {data: self.selectData})
           .then(res => {
             if (res.data.code === Status.success) {
-              self.$notify.success('删除系统成功')
+              self.$notify.success(self.$t('constant.system.DELETE_SYSTEM_SUCCESS_NOTIFY'))
               self.loadTable()
               self.deleteDialogShow = false
             } else {
-              self.$notify.error('删除系统失败')
+              self.$notify.error(self.$t('constant.system.DELETE_SYSTEM_FAILED_NOTIFY'))
             }
             self.deleteDialogLoading = false
           })
@@ -182,7 +182,7 @@ export default {
             self.deleteDialogLoading = false
           })
       } else {
-        self.$notify.warning('请选择需要删除的系统')
+        self.$notify.warning(self.$t('constant.system.DELETE_SYSTEM_WARN_NOTIFY'))
         self.deleteDialogShow = false
       }
     }

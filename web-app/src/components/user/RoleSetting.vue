@@ -1,9 +1,9 @@
 <template lang="html">
-  <el-dialog title="配置角色" :visible.sync="roleSettingShow">
-    <el-transfer v-model="selected" :data="roles" :titles="['角色列表', '授权角色']"></el-transfer>
+  <el-dialog :title="$t('constant.user.ROLE_SET')" :visible.sync="roleSettingShow">
+    <el-transfer v-model="selected" :data="roles" :titles="[$t('constant.user.ROLE_LIST'), $t('constant.user.AUTH_ROLE')]"></el-transfer>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="roleSettingShow = false">取 消</el-button>
-      <el-button type="primary" @click="saveRoleSetting" :loading="roleSettingLoading">确 定</el-button>
+      <el-button @click="roleSettingShow = false">{{$t('button.CANCEL')}}</el-button>
+      <el-button type="primary" @click="saveRoleSetting" :loading="roleSettingLoading">{{$t('button.SURE')}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -65,12 +65,12 @@ export default {
       self.$http.post(`${DataMainApi}/user/role`, userRole)
         .then(res => {
           if (res.data.code === Status.success) {
-            self.$notify.success('保存用户角色成功！')
+            self.$notify.success(self.$t('constant.user.SAVE_USER_ROLE_SUCCESS_NOTIFY'))
             self.roleSettingShow = false
             // 触发事件
             self.$emit('success')
           } else {
-            self.$notify.error('保存用户角色失败！')
+            self.$notify.error(self.$t('constant.user.SAVE_USER_ROLE_FAILED_NOTIFY'))
           }
           self.roleSettingLoading = false
         })

@@ -3,27 +3,27 @@
   <!--查尋條件-->
     <el-row>
     <el-form :inline="true" :model="form" class="demo-form-inline">
-    <el-form-item label="用户名">
-      <el-input v-model="form.userName" placeholder="用户名"></el-input>
+    <el-form-item :label="$t('constant.user.USERNAME')">
+      <el-input v-model="form.userName" :placeholder="$t('constant.user.USERNAME')"></el-input>
     </el-form-item>
-    <el-form-item label="手机号码">
-      <el-input v-model="form.phone" placeholder="手机号码"></el-input>
+    <el-form-item :label="$t('constant.user.PHONE_NUMBER')">
+      <el-input v-model="form.phone" :placeholder="$t('constant.user.PHONE_NUMBER')"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="query">查询</el-button>
+      <el-button type="primary" @click="query">{{$t('button.SEARCH')}}</el-button>
     </el-form-item>
     </el-form>
     </el-row>
     <el-row style="margin-bottom: 20px">
-    <el-button type="primary" icon="el-icon-add" @click="showAddDialog">新增</el-button>
-    <el-button type="warning" icon="el-icon-setting" @click="showResetDialog">重置密码</el-button>
-    <el-button type="danger" icon="el-icon-delete" @click="showDeleteDialog">删除</el-button>
+    <el-button type="primary" icon="el-icon-add" @click="showAddDialog">{{$t('button.ADD')}}</el-button>
+    <el-button type="warning" icon="el-icon-setting" @click="showResetDialog">{{$t('button.RESET_PASSWORD')}}</el-button>
+    <el-button type="danger" icon="el-icon-delete" @click="showDeleteDialog">{{$t('button.DELETE')}}</el-button>
     </el-row>
 
     <el-table
       :data="tableData"
       v-loading="tableLoading"
-      element-loading-text="加载中"
+      :element-loading-text="$t('message.LOADING')"
       @selection-change="handleSelectionChange"
       style="width: 100%; margin-top: 10px">
        <el-table-column
@@ -32,43 +32,43 @@
       </el-table-column>
       <el-table-column
         prop="userName"
-        label="用户名"
+        :label="$t('constant.user.USERNAME')"
         >
       </el-table-column>
       <el-table-column
         prop="phone"
-        label="手机号码"
+        :label="$t('constant.user.PHONE_NUMBER')"
         >
       </el-table-column>
       <el-table-column
         prop="age"
-        label="年龄"
+        :label="$t('constant.user.AGE')"
       >
       </el-table-column>
       <el-table-column
         prop="gender"
-        label="性别">
+        :label="$t('constant.user.GENDER')">
         <template slot-scope="scope">
-            <el-tag v-if="scope.row.gender === 'female'" type="danger">女</el-tag>
-            <el-tag v-else type="primary">男</el-tag>
+            <el-tag v-if="scope.row.gender === 'female'" type="danger">{{$t('constant.user.FEMALE')}}</el-tag>
+            <el-tag v-else type="primary">{{$t('constant.user.MALE')}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
         prop="active"
-        label="是否启用">
+        :label="$t('constant.user.ACTIVE')">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.active === 0" type="danger">否</el-tag>
-          <el-tag v-else type="primary">是</el-tag>
+          <el-tag v-if="scope.row.active === 0" type="danger">{{$t('constant.FALSE')}}</el-tag>
+          <el-tag v-else type="primary">{{$t('constant.TRUE')}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
         fixed="right"
-        label="操作"
+        :label="$t('constant.OPERATE')"
         width="300">
         <template slot-scope="scope" >
-          <el-button size="small" @click="showEditDialog(scope.row)">编辑</el-button>
-          <el-button type="warning" size="small" @click="showRoleSetDialog(scope.row)">角色配置</el-button>
-          <el-button type="danger" size="small" @click="showResetDialogByCol(scope.row)">重置密码</el-button>
+          <el-button size="small" @click="showEditDialog(scope.row)">{{$t('button.EDIT')}}</el-button>
+          <el-button type="warning" size="small" @click="showRoleSetDialog(scope.row)">{{$t('button.ROLE_SET')}}</el-button>
+          <el-button type="danger" size="small" @click="showResetDialogByCol(scope.row)">{{$t('button.RESET_PASSWORD')}}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -88,24 +88,24 @@
     </el-row>
     <!--重置密码-->
     <el-dialog
-      title="提示"
+      :title="$t('constant.HINT')"
       :visible.sync="resetDialogShow"
       width="30%">
-      <span>确定重置密码为 000000 ？</span>
+      <span>{{$t('constant.user.RESET_PASSWORD_HINT')}}</span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="resetDialogShow = false">取 消</el-button>
-        <el-button type="danger" :loading="resetDialogLoading" @click="resetDialogClick">确 定</el-button>
+        <el-button @click="resetDialogShow = false">{{$t('button.CANCEL')}}</el-button>
+        <el-button type="danger" :loading="resetDialogLoading" @click="resetDialogClick">{{$t('button.SURE')}}</el-button>
       </span>
     </el-dialog>
     <!--删除用户-->
     <el-dialog
-      title="提示"
+      :title="$t('constant.HINT')"
       :visible.sync="deleteDialogShow"
       width="30%">
-      <span>确定删除选中用户？</span>
+      <span>{{$t('constant.user.DELETE_USER_HINT')}}</span>
       <span slot="footer" class="dialog-footer">
-            <el-button @click="deleteDialogShow = false">取 消</el-button>
-            <el-button type="danger" :loading="deleteDialogLoading" @click="deleteDialogClick">确 定</el-button>
+            <el-button @click="deleteDialogShow = false">{{$t('button.CANCEL')}}</el-button>
+            <el-button type="danger" :loading="deleteDialogLoading" @click="deleteDialogClick">{{$t('button.SURE')}}</el-button>
           </span>
     </el-dialog>
     <!--新增用户表单-->
@@ -215,11 +215,11 @@ export default {
         this.$http.post(DataMainApi + '/user/password/000000', this.selectData)
           .then(res => {
             if (res.data.code === Status.success) {
-              self.$notify.success('重置密码成功')
+              self.$notify.success(self.$t('constant.user.RESET_PASSWORD_SUCCESS_NOTIFY'))
               self.loadTable()
               self.resetDialogShow = false
             } else {
-              self.$notify.error('重置密码失败')
+              self.$notify.error(self.$t('constant.user.RESET_PASSWORD_FAILED_NOTIFY'))
             }
             self.resetDialogLoading = false
           })
@@ -227,7 +227,7 @@ export default {
             self.resetDialogLoading = false
           })
       } else {
-        self.$notify.warning('请选择需要重置密码的用户')
+        self.$notify.warning(self.$t('constant.user.RESET_PASSWORD_WARN_NOTIFY'))
         self.resetDialogShow = false
       }
     },
@@ -239,11 +239,11 @@ export default {
         this.$http.delete(DataMainApi + '/user', {data: self.selectData})
           .then(res => {
             if (res.data.code === Status.success) {
-              self.$notify.success('删除用户成功')
+              self.$notify.success(self.$t('constant.user.DELETE_USER_SUCCESS_NOTIFY'))
               self.loadTable()
               self.deleteDialogShow = false
             } else {
-              self.$notify.error('删除用户失败')
+              self.$notify.error(self.$t('constant.user.DELETE_USER_FAILED_NOTIFY'))
             }
             self.deleteDialogLoading = false
           })
@@ -251,7 +251,7 @@ export default {
             self.deleteDialogLoading = false
           })
       } else {
-        self.$notify.warning('请选择需要删除的用户')
+        self.$notify.warning(self.$t('constant.user.DELETE_USER_WARN_NOTIFY'))
         self.deleteDialogShow = false
       }
     }
