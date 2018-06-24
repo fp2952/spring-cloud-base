@@ -9,10 +9,13 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import i18n from './plugin/i18n'
 import Config from './config/config'
+import '@/assets/fonts/iconfont.css'
 
 Vue.config.productionTip = false
 
-Vue.use(ElementUI)
+Vue.use(ElementUI, {
+  i18n: (key, value) => i18n.t(key, value)
+})
 Vue.use(Auth, router)
 Config.init(Vue)
 /* eslint-disable no-new */

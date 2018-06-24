@@ -6,6 +6,12 @@
       <el-row  type="flex" justify="space-between" style="top: 50%;margin-top: -13px;">
         <el-col :span="2" style="text-align: center">{{$t('message.title')}}</el-col>
         <el-col :span="6" class="main-dropdown">
+          <el-tooltip class="item" effect="dark" content="全屏" placement="bottom" v-show="!fullScreen">
+            <img src="../assets/img/full-screen.png" class="main-avatar" style="margin-right: 20px" @click="requestFullScreen"/>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="取消全屏" placement="bottom" v-show="fullScreen">
+            <img src="../assets/img/cancel-full-screen.png" class="main-avatar" style="margin-right: 20px" @click="exitFullscreen"/>
+          </el-tooltip>
           <el-dropdown @command="handleTranslate" style="margin-right: 30px">
             <span class="el-dropdown-link">
               {{lang}}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -15,7 +21,7 @@
               <el-dropdown-item command="English">English</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <img src="../assets/img/account.png" class="main-avatar" />
+          <img src="../assets/img/account.png" class="main-avatar circel" />
           <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
               {{userInfo.userName}}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -112,7 +118,8 @@ export default {
       tagLenght: 15,
       breadcrumb: [{ title: '首页', code: 'HOME_PAGE', path: '/' }],
       isCollapse: false,
-      lang: '中文'
+      lang: '中文',
+      fullScreen: false
     }
   },
   created () {
@@ -214,6 +221,30 @@ export default {
     },
     collapse () {
       this.isCollapse = !this.isCollapse
+    },
+    // 进入全屏
+    requestFullScreen () {
+      var de = document.documentElement
+      if (de.requestFullscreen) {
+        de.requestFullscreen()
+      } else if (de.mozRequestFullScreen) {
+        de.mozRequestFullScreen()
+      } else if (de.webkitRequestFullScreen) {
+        de.webkitRequestFullScreen()
+      }
+      this.fullScreen = true
+    },
+    // 退出全屏
+    exitFullscreen () {
+      var de = document
+      if (de.exitFullscreen) {
+        de.exitFullscreen()
+      } else if (de.mozCancelFullScreen) {
+        de.mozCancelFullScreen()
+      } else if (de.webkitCancelFullScreen) {
+        de.webkitCancelFullScreen()
+      }
+      this.fullScreen = false
     }
   },
   computed: {
@@ -271,9 +302,11 @@ export default {
   .main-avatar {
     width: 25px;
     height: 25px;
+    margin-right: 5px;
+  }
+  .circel {
     border-radius: 25px;
     border: 1px solid #ccc;
-    margin-right: 5px;
   }
   .main-breadcrumxxb {
     height: 40px !important;
