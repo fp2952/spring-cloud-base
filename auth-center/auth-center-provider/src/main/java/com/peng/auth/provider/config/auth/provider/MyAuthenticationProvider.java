@@ -77,7 +77,7 @@ public class MyAuthenticationProvider extends MyAbstractUserDetailsAuthenticatio
         UserDetails loadedUser;
         try {
             // 调用loadUserByUsername时加入type前缀
-            loadedUser = this.getUserDetailsService().loadUserByUsername(authentication.getType() + ":" + username);
+            loadedUser = this.getUserDetailsService().loadUserByUsername(authentication.getType() + "&:@" + username);
         } catch (UsernameNotFoundException var6) {
             if(authentication.getCredentials() != null) {
                 String presentedPassword = authentication.getCredentials().toString();

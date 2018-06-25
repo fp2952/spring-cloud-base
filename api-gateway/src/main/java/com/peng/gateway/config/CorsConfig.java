@@ -11,12 +11,13 @@ import org.springframework.web.filter.CorsFilter;
 
 /**
  * Created by fp295 on 2018/5/6.
+ * 跨域开发环境使用 vue-cli 代理，正式用nginx
  */
 @Order(2)
 @Configuration
 public class CorsConfig {
 
-    @Bean
+    /*@Bean
     public FilterRegistrationBean corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
@@ -24,9 +25,9 @@ public class CorsConfig {
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("*", config);
         FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
-    }
+    }*/
 }

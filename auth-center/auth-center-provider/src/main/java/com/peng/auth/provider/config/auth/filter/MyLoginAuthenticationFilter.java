@@ -16,6 +16,12 @@ import java.io.IOException;
 /**
  * Created by fp295 on 2018/6/16.
  * 自定义登陆filter，新增登陆方式：验证码、二维码扫码、账号密码；
+ * 验证码登陆：
+ *       post: /login?type=phone&phone=13000000000&verifyCode=1000
+ * 二维码登陆：
+ *       post: /login?type=qr&qrCode=token
+ * 账号密码登陆：
+ *       post: /login?username=username&password=password
  * 此filter 为生成自定义的 MyAuthenticationToken
  */
 public class MyLoginAuthenticationFilter extends AbstractAuthenticationProcessingFilter {

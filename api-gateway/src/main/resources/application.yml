@@ -12,7 +12,7 @@ server:
 zuul:
   routes:
     main-data:
-      path: /main-data/api/**
+      path: /api/main-data/**
       serviceId: main-data
 proxy:
   auth:

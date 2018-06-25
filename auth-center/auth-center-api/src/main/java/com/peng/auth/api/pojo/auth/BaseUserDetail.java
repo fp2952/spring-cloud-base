@@ -11,6 +11,7 @@ import java.util.*;
 /**
  * Created by fp295 on 2018/4/29.
  * 包装org.springframework.security.core.userdetails.User类
+ * 新增 baseUser 用于生成 jwt 的用户信息
  */
 public class BaseUserDetail implements UserDetails, CredentialsContainer {
 

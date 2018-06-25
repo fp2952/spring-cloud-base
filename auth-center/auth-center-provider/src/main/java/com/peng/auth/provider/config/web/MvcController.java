@@ -66,7 +66,7 @@ public class MvcController {
     }
 
     /**
-     * 主页
+     * 主页，未从客户端跳转直接登陆会显示
      * @param model
      * @return
      */

@@ -10,7 +10,16 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/api':{
+        target: 'http://127.0.0.1:18000',
+        changeOrigin: true // 必须，为true的话，请求的header将会设置为匹配目标服务器的规则（Access-Control-Allow-Origin）
+      },
+      '/auth':{
+        target: 'http://127.0.0.1:18001',
+        changeOrigin: true // 必须，为true的话，请求的header将会设置为匹配目标服务器的规则（Access-Control-Allow-Origin）
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

@@ -1,4 +1,4 @@
-<template>
+<template @keyup.esc="requestFullScreen">
   <el-container class="main">
     <!--header -->
     <el-header class="main-top">
@@ -6,11 +6,8 @@
       <el-row  type="flex" justify="space-between" style="top: 50%;margin-top: -13px;">
         <el-col :span="2" style="text-align: center">{{$t('message.title')}}</el-col>
         <el-col :span="6" class="main-dropdown">
-          <el-tooltip class="item" effect="dark" content="全屏" placement="bottom" v-show="!fullScreen">
-            <img src="../assets/img/full-screen.png" class="main-avatar" style="margin-right: 20px" @click="requestFullScreen"/>
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="取消全屏" placement="bottom" v-show="fullScreen">
-            <img src="../assets/img/cancel-full-screen.png" class="main-avatar" style="margin-right: 20px" @click="exitFullscreen"/>
+          <el-tooltip class="item" effect="dark" content="全屏切换" placement="bottom">
+            <img src="../assets/img/full-screen.png" class="main-avatar" style="margin-right: 20px" @click="fullScreen"/>
           </el-tooltip>
           <el-dropdown @command="handleTranslate" style="margin-right: 30px">
             <span class="el-dropdown-link">
@@ -118,8 +115,7 @@ export default {
       tagLenght: 15,
       breadcrumb: [{ title: '首页', code: 'HOME_PAGE', path: '/' }],
       isCollapse: false,
-      lang: '中文',
-      fullScreen: false
+      lang: '中文'
     }
   },
   created () {
@@ -222,6 +218,16 @@ export default {
     collapse () {
       this.isCollapse = !this.isCollapse
     },
+    fullScreen () {
+      if (document.fullscreenElement ||
+          document.msFullscreenElement ||
+          document.mozFullScreenElement ||
+          document.webkitFullscreenElement || false) {
+        this.exitFullscreen()
+      } else {
+        this.requestFullScreen()
+      }
+    },
     // 进入全屏
     requestFullScreen () {
       var de = document.documentElement
@@ -232,7 +238,6 @@ export default {
       } else if (de.webkitRequestFullScreen) {
         de.webkitRequestFullScreen()
       }
-      this.fullScreen = true
     },
     // 退出全屏
     exitFullscreen () {
@@ -244,7 +249,6 @@ export default {
       } else if (de.webkitCancelFullScreen) {
         de.webkitCancelFullScreen()
       }
-      this.fullScreen = false
     }
   },
   computed: {

@@ -48,7 +48,15 @@ public class BaseUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String var1) throws UsernameNotFoundException {
 
         BaseUser baseUser;
-        String[] parameter = var1.split(":");
+        String[] parameter;
+        int index = var1.indexOf("&:@");
+        if (index != -1) {
+            parameter = var1.split("&:@");
+        }else {
+            // 如果是 refresh_token 不分割
+            parameter = new String[]{MyLoginAuthenticationFilter.SPRING_SECURITY_RESTFUL_TYPE_DEFAULT, var1};
+        }
+
         // 手机验证码调用FeignClient根据电话号码查询用户
         if(MyLoginAuthenticationFilter.SPRING_SECURITY_RESTFUL_TYPE_PHONE.equals(parameter[0])){
             ResponseData<BaseUser> baseUserResponseData = baseUserService.getUserByPhone(parameter[1]);
@@ -69,6 +77,7 @@ public class BaseUserDetailService implements UserDetailsService {
             }
             baseUser = baseUserResponseData.getData();
         }
+
 
         // 调用FeignClient查询角色
         ResponseData<List<BaseRole>> baseRoleListResponseData = baseRoleService.getRoleByUserId(baseUser.getId());
