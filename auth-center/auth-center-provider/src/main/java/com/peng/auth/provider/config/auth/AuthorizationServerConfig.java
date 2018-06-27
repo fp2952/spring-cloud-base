@@ -110,7 +110,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     /**
      * 跨域, 开发环境使用 vue-cli 代理，正式用nginx
      */
-    /*@Bean
+    @Bean
     public FilterRegistrationBean corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
@@ -118,10 +118,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        source.registerCorsConfiguration("*//**", config);
+        source.registerCorsConfiguration("/**", config);
         FilterRegistrationBean bean =  new FilterRegistrationBean(new CorsFilter(source));
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
-    }*/
+    }
 
 }

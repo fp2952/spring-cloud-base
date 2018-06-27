@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
 import { UPDATE_MAIN_LOADING } from '../store/constant'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
 Vue.use(Router)
 
 var router = new Router({
@@ -32,6 +35,10 @@ var router = new Router({
           name: 'AppManaged',
           component: resolve => require(['@/components/app/AppManaged.vue'], resolve)
         }, {
+          path: '/iframe',
+          name: 'Iframe',
+          component: resolve => require(['@/components/iframe/Iframe.vue'], resolve)
+        }, {
           path: '*',
           name: 'notFound',
           component: resolve => require(['@/components/error/NotFound.vue'], resolve)
@@ -44,6 +51,7 @@ var router = new Router({
 // 设置全局钩子
 router.beforeEach(function (to, from, next) {
   store.commit(UPDATE_MAIN_LOADING, {isLoading: true})
+  NProgress.start()
   next()
 })
 
@@ -51,6 +59,7 @@ router.afterEach(function (to) {
   setTimeout(function () {
     store.commit(UPDATE_MAIN_LOADING, {isLoading: false})
   }, 500)
+  NProgress.done()
 })
 
 export default router

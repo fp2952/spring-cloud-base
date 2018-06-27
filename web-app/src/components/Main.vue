@@ -171,10 +171,11 @@ export default {
       return false
     },
     handleCommand (command) {
+      var self = this
       if (command === 'logout') {
-        this.$auth.logout()
+        self.$auth.logout()
       } else if (command === 'modify') {
-        this.$refs.modifyPassword.show(this.userInfo)
+        self.$refs.modifyPassword.show(self.userInfo, self.$i18n.locale)
       }
     },
     handleTranslate (command) {

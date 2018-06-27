@@ -1,0 +1,42 @@
+server:
+  port: 18003
+spring:
+  cloud:
+    consul:
+      host: ${CONSUL_HOST:localhost}
+      port: ${CONSUL_PORT:8500}
+      discovery:
+        prefer-ip-address: true
+        health-check-path: /health
+  application:
+    name: monitor
+  rabbitmq:
+      host: localhost
+      port: 5672
+      username: fangp
+      password: '000000'
+  boot:
+      admin:
+        turbine:
+          location: monitor
+        routes:
+          endpoints: env,metrics,trace,dump,jolokia,info,configprops,trace,logfile,refresh,flyway,liquibase,heapdump,loggers,auditevents,hystrix.stream,turbine.stream
+        discovery:
+          ignored-services: consul
+turbine:
+    app-config: api-gateway #收集监控信息的服务名
+    combine-host-port: true
+    cluster-name-expression: new String('default') #集群名称
+management:
+  security:
+    enabled: false
+  info:
+    git:
+      mode: full
+info:
+  version: @project.version@
+receiver:
+  mobiles:
+    - 17034642119
+  emails: |
+    fp2952@163.com

@@ -40,6 +40,11 @@ spring:
       database: 0
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+  rabbitmq:
+      host: localhost
+      port: 5672
+      username: fangp
+      password: '000000'
 # 权限配置
 security:
   ignored: |
@@ -61,3 +66,6 @@ logging:
   file: logs/main-data.log
 server:
   port: 18002
+management:
+  security:
+    enabled: false

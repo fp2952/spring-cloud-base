@@ -1,0 +1,22 @@
+# 数据源配置
+spring:
+  cloud:
+      consul:
+        host: ${CONSUL_HOST:localhost}
+        port: ${CONSUL_PORT:8500}
+        discovery:
+          prefer-ip-address: true
+  application:
+      name: mc-service
+  rabbitmq:
+      host: localhost
+      port: 5672
+      username: fangp
+      password: '000000'
+logging:
+  file: logs/mc-service.log
+server:
+  port: 18004
+management:
+  security:
+    enabled: false

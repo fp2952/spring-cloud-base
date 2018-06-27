@@ -29,6 +29,8 @@
         <module>db-mybatis-pagehelper</module>
         <module>api-gateway</module>
         <module>config-git</module>
+        <module>visul</module>
+        <module>mc-service</module>
     </modules>
 
     <dependencyManagement>

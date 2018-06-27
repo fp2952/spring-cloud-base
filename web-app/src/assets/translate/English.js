@@ -6,6 +6,9 @@ export const En = {
   SYSTEM_MANAGED: 'System managed',
   MODULE_MANAGED: 'Module managed',
   HOME_PAGE: 'Home',
+  SYSTEM_VISUL: 'System Visul',
+  ADMIN_MONITOR: 'Cloud Admin',
+  ZIPKIN_MONITOR: 'Zipkin',
   message: {
     title: 'Base Framework',
     LOADING: 'loading..',

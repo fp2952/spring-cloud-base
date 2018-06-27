@@ -1,6 +1,5 @@
 package com.peng.common.pojo;
 
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 基础查询参数实体

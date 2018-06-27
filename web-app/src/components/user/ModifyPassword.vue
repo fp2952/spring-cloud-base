@@ -71,7 +71,7 @@ export default {
     }
   },
   methods: {
-    show (data) {
+    show (data, locale) {
       var self = this
       if (this.$refs.modifyPasswordForm) {
         // 重置表单

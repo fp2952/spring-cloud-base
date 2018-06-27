@@ -7,6 +7,9 @@ export const Ch =
     SYSTEM_MANAGED: '系统管理',
     MODULE_MANAGED: '模块管理',
     HOME_PAGE: '首页',
+    SYSTEM_VISUL: '系统监控',
+    ADMIN_MONITOR: '服务监控',
+    ZIPKIN_MONITOR: 'zipkin监控',
     message: {
       title: '基础框架',
       LOADING: '加载中',
