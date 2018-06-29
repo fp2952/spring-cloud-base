@@ -1,0 +1,37 @@
+server:
+  port: 18006
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native
+  cloud:
+    consul:
+      host: ${CONSUL_HOST:localhost}
+      port: ${CONSUL_PORT:8500}
+      discovery:
+        prefer-ip-address: true
+
+---
+spring:
+  profiles: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config/
+      fail-fast: true
+
+---
+spring:
+  profiles: prd
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/ityouknow/spring-cloud-starter/     # 配置git仓库的地址
+          search-paths: config-repo                             # git仓库地址下的相对地址，可以配置多个，用,分割。
+          username:                                             # git仓库的账号
+          password:                                             # git仓库的密码
+

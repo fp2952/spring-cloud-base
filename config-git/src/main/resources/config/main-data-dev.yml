@@ -1,3 +1,5 @@
+server:
+  port: 18002
 # 数据源配置
 spring:
   datasource:
@@ -28,14 +30,6 @@ spring:
         reset-enable: false
         login-username: sysadmin
         login-password: "000000"
-  cloud:
-      consul:
-        host: ${CONSUL_HOST:localhost}
-        port: ${CONSUL_PORT:8500}
-        discovery:
-          prefer-ip-address: true
-  application:
-      name: main-data
   redis:
       database: 0
       host: ${REDIS_HOST:localhost}
@@ -64,8 +58,3 @@ mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
 logging:
   file: logs/main-data.log
-server:
-  port: 18002
-management:
-  security:
-    enabled: false

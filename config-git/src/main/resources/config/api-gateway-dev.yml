@@ -1,23 +1,24 @@
-spring:
-  cloud:
-    consul:
-      host: ${CONSUL_HOST:localhost}
-      port: ${CONSUL_PORT:8500}
-      discovery:
-        prefer-ip-address: true
-  application:
-    name: api-gateway
 server:
   port: 18000
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    password: '000000'
+    username: fangp
+
 zuul:
   routes:
     main-data:
       path: /api/main-data/**
       serviceId: main-data
+
 proxy:
   auth:
     routes:
       main-data: oauth2
+
 security:
   ignored: |
     /css/**,/js/**,/favicon.ico,/webjars/**,/images/**,
@@ -29,6 +30,3 @@ security:
         key-uri: http://${AUTH_CENTER_HOST:localhost}:${AUTH_CENTER_PORT:18001}/auth/oauth/token_key
       id: ${spring.application.name}
       serviceId: ${spring.application.name}
-management:
-  security:
-    enabled: false

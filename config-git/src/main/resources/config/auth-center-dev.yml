@@ -5,19 +5,8 @@ security:
     /jolokia,/configprops,/activiti,/logfile,/refresh,/flyway,/liquibase,/loggers,/druid/**,
     /oauth/deleteToken, /backReferer
 server:
-  context-path: /auth
   port: 18001
 spring:
-  cloud:
-    consul:
-      host: ${CONSUL_HOST:localhost}
-      port: ${CONSUL_PORT:8500}
-      discovery:
-        prefer-ip-address: true
-        health-check-path: ${server.context-path}/health
-        tags: management.context-path=${server.context-path}
-  application:
-    name: auth-center
   redis:
     database: 0
     host: ${REDIS_HOST:localhost}
@@ -52,8 +41,10 @@ spring:
         login-password: "000000"
   freemarker:
       request-context-attribute: request
+  rabbitmq:
+      host: localhost
+      port: 5672
+      username: fangp
+      password: '000000'
 logging:
   file: logs/auth-center.log
-management:
-  security:
-    enabled: false

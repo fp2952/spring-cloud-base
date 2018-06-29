@@ -40,4 +40,5 @@ public class RabbitConfig {
     public Queue initServiceStatusChangeQueue() {
         return new Queue(MqQueueConstant.SERVICE_STATUS_CHANGE);
     }
+
 }

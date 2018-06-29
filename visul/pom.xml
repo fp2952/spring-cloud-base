@@ -14,5 +14,6 @@
 
     <modules>
         <module>monitor</module>
+        <module>zipkin-db</module>
     </modules>
 </project>

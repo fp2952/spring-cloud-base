@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: auth-center
+  profiles:
+    active: dev
+  cloud:
+    consul:
+      host: ${CONSUL_HOST:localhost}
+      port: ${CONSUL_PORT:8500}
+      discovery:
+        prefer-ip-address: true
+        health-check-path: ${server.context-path}/health
+        tags: management.context-path=${server.context-path}
+    config:
+      fail-fast: true
+      discovery:
+        service-id: config-server
+        enabled: true
+      profile: ${spring.profiles.active}
+      label: ${spring.profiles.active}
+
+server:
+  context-path: /auth

@@ -1,0 +1,20 @@
+server:
+  tomcat:
+    max-threads: 500 # Maximum amount of worker threads.
+    min-spare-threads: 50 # Minimum amount of worker threads
+
+
+#监控短点配置
+management:
+  security:
+    enabled: false
+  info:
+    git:
+      mode: full
+endpoints:
+  actuator:
+    enabled: true
+  shutdown:
+    enabled: false
+info:
+  version: @project.version@

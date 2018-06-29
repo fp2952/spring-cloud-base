@@ -1,0 +1,12 @@
+server:
+   port: 18004
+
+spring:
+   rabbitmq:
+        host: localhost
+        port: 5672
+        username: fangp
+        password: '000000'
+
+logging:
+  file: logs/mc-service.log
