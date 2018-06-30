@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>db-spring-boot-samples</artifactId>
+    <description>mybatis、分页模块使用样例</description>
     <packaging>jar</packaging>
 
     <dependencies>

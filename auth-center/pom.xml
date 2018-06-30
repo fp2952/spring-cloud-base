@@ -15,7 +15,9 @@
         <module>auth-spring-boot-autoconfigure</module>
         <module>auth-spring-boot-starter</module>
     </modules>
+
     <artifactId>auth-center</artifactId>
+    <description>授权中心模块</description>
 
 
 </project>

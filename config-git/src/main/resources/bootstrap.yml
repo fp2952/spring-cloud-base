@@ -5,13 +5,25 @@ spring:
   application:
     name: config-server
   profiles:
-    active: native
+    active: native                 # native 为本地配置
   cloud:
     consul:
       host: ${CONSUL_HOST:localhost}
       port: ${CONSUL_PORT:8500}
       discovery:
         prefer-ip-address: true
+#监控短点配置
+management:
+  security:
+    enabled: false
+  info:
+    git:
+      mode: full
+endpoints:
+  actuator:
+    enabled: true
+  shutdown:
+    enabled: false
 
 ---
 spring:
@@ -25,13 +37,13 @@ spring:
 
 ---
 spring:
-  profiles: prd
+  profiles: dev
   cloud:
     config:
       server:
         git:
-          uri: https://github.com/ityouknow/spring-cloud-starter/     # 配置git仓库的地址
-          search-paths: config-repo                             # git仓库地址下的相对地址，可以配置多个，用,分割。
-          username:                                             # git仓库的账号
-          password:                                             # git仓库的密码
+          uri: https://github.com/fp2952/spring-cloud-config   # 配置git仓库的地址
+          search-paths:         # git仓库地址下的相对地址，可以配置多个，用,分割。
+          username:                                      # git仓库的账号
+          password:                                     # git仓库的密码
 

@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>auth-spring-boot-starter</artifactId>
+    <description>授权中心starter</description>
 
     <dependencies>
         <!-- Spring Boot 自动装配 -->

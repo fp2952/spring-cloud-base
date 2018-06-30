@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>auth-center-provider</artifactId>
+    <description>授权中心服务端</description>
     <packaging>jar</packaging>
 
 
@@ -114,6 +115,10 @@
                 <configuration>
                  <executable>true</executable>
              </configuration>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

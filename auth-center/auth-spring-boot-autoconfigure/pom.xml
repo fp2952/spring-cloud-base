@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>auth-spring-boot-autoconfigure</artifactId>
+    <description>授权中心autoconfigure</description>
 
     <dependencies>
         <!-- Spring Boot 自动装配 -->

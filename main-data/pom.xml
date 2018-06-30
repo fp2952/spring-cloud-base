@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>main-data</artifactId>
+    <description>main-data服务模块</description>
     <packaging>pom</packaging>
     <modules>
         <module>main-data-api</module>

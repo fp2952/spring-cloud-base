@@ -10,6 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>main-data-api</artifactId>
+    <description>main-data公共api</description>
+
     <dependencies>
 
         <dependency>

@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>main-data-provider</artifactId>
+    <description>main-data服务端</description>
 
     <dependencies>
 
@@ -93,12 +94,17 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                 <executable>true</executable>
-             </configuration>
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
     <!-- 普通的maven打包方式 -->
+
     <!-- 结合docker的maven打包方式,并上传提交创建的镜像 -->
     <!--<build>
         <plugins>

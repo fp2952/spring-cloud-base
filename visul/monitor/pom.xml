@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>monitor</artifactId>
-    <description>spring-cloud-admin监控</description>
+    <description>spring-cloud-admin监控服务</description>
 
     <dependencies>
         <dependency>
@@ -21,29 +21,29 @@
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-server</artifactId>
-            <version>1.5.3</version>
+            <version>1.5.7</version>
         </dependency>
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-server-ui</artifactId>
-            <version>1.5.3</version>
+            <version>1.5.7</version>
         </dependency>
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-server-ui-turbine</artifactId>
-            <version>1.5.3</version>
+            <version>1.5.7</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-turbine</artifactId>
-            <!--去除eureka，使用的consul-->
-            <exclusions>
-            <exclusion>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-eureka</artifactId>
-            </exclusion>
-            </exclusions>
-        </dependency>
+         <dependency>
+             <groupId>org.springframework.cloud</groupId>
+             <artifactId>spring-cloud-starter-turbine</artifactId>
+             <!--去除eureka，使用的consul-->
+             <exclusions>
+             <exclusion>
+                 <groupId>org.springframework.cloud</groupId>
+                 <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+             </exclusion>
+             </exclusions>
+         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -82,17 +82,6 @@
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
-                <version>2.1.15</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

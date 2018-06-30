@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>db-spring-boot-starter</artifactId>
+    <description>mybatis、分页模块starter</description>
     <packaging>jar</packaging>
 
     <dependencies>

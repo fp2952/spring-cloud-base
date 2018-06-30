@@ -11,6 +11,7 @@
 
 
     <artifactId>db-spring-boot-autoconfigure</artifactId>
+    <description>mybatis、分页模块autoconfigure</description>
     <packaging>jar</packaging>
 
 
