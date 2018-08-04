@@ -31,7 +31,6 @@ export default {
         flag = false
       }
       var list = []
-      debugger
       for (var key in this.$route.query) {
         if (key !== 'src' && key !== 'name') {
           var v = this.$route.query[key]

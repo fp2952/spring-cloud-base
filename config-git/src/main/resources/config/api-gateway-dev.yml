@@ -30,3 +30,6 @@ security:
         key-uri: http://${AUTH_CENTER_HOST:localhost}:${AUTH_CENTER_PORT:18001}/auth/oauth/token_key
       id: ${spring.application.name}
       serviceId: ${spring.application.name}
+
+logging:
+  file: logs/api-gateway.log

@@ -21,4 +21,4 @@ zipkin:
     type: mysql
 
 logging:
-  file: logs/localhost.log
+  file: logs/zipkin-db.log

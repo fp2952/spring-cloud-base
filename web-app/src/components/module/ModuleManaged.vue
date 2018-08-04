@@ -9,7 +9,6 @@
       ref="tree"
       lazy
       highlight-current
-      :expand-on-click-node="false"
       :default-expanded-keys="expandedKeys"
       :props="treeProps"
       :load="loadSubModule"
