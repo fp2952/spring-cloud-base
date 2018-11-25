@@ -1,11 +1,15 @@
 package com.peng.auth.provider.config.auth.filter;
 
 import com.peng.auth.provider.config.auth.token.MyAuthenticationToken;
+import com.peng.auth.provider.config.auth.token.PhoneAuthenticationToken;
+import com.peng.auth.provider.config.auth.token.QrAuthenticationToken;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.ServletException;
@@ -24,7 +28,7 @@ import java.io.IOException;
  *       post: /login?username=username&password=password
  * 此filter 为生成自定义的 MyAuthenticationToken
  */
-public class MyLoginAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class MyLoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     public static final String SPRING_SECURITY_RESTFUL_TYPE_PHONE = "phone";
     public static final String SPRING_SECURITY_RESTFUL_TYPE_QR = "qr";
@@ -44,13 +48,13 @@ public class MyLoginAuthenticationFilter extends AbstractAuthenticationProcessin
     private static final String SPRING_SECURITY_RESTFUL_LOGIN_URL = "/login";
     private boolean postOnly = true;
 
-    public MyLoginAuthenticationFilter() {
+    /*public MyLoginAuthenticationFilter() {
         super(new AntPathRequestMatcher(SPRING_SECURITY_RESTFUL_LOGIN_URL, "POST"));
-    }
+    }*/
 
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         if (postOnly && !request.getMethod().equals("POST")) {
             throw new AuthenticationServiceException(
                     "Authentication method not supported: " + request.getMethod());
@@ -58,7 +62,7 @@ public class MyLoginAuthenticationFilter extends AbstractAuthenticationProcessin
 
         String type = obtainParameter(request, SPRING_SECURITY_RESTFUL_TYPE_KEY);
         String mobile = obtainParameter(request, SPRING_SECURITY_RESTFUL_MOBILE_KEY);
-        MyAuthenticationToken authRequest;
+        AbstractAuthenticationToken authRequest;
         String principal;
         String credentials;
 
@@ -66,28 +70,27 @@ public class MyLoginAuthenticationFilter extends AbstractAuthenticationProcessin
         if(SPRING_SECURITY_RESTFUL_TYPE_PHONE.equals(type)){
             principal = obtainParameter(request, SPRING_SECURITY_RESTFUL_PHONE_KEY);
             credentials = obtainParameter(request, SPRING_SECURITY_RESTFUL_VERIFY_CODE_KEY);
+
+            principal = principal.trim();
+            authRequest = new PhoneAuthenticationToken(principal, credentials);
         }
         // 二维码扫码登陆
         else if(SPRING_SECURITY_RESTFUL_TYPE_QR.equals(type)){
             principal = obtainParameter(request, SPRING_SECURITY_RESTFUL_QR_CODE_KEY);
             credentials = null;
+            authRequest = new QrAuthenticationToken(principal, credentials);
         }
         // 账号密码登陆
         else {
             principal = obtainParameter(request, SPRING_SECURITY_RESTFUL_USERNAME_KEY);
             credentials = obtainParameter(request, SPRING_SECURITY_RESTFUL_PASSWORD_KEY);
-            if(type == null)
-                type = SPRING_SECURITY_RESTFUL_TYPE_DEFAULT;
+
+            principal = principal.trim();
+            authRequest = new UsernamePasswordAuthenticationToken(principal, credentials);
+
         }
-        if (principal == null) {
-            principal = "";
-        }
-        if (credentials == null) {
-            credentials = "";
-        }
-        principal = principal.trim();
-        authRequest = new MyAuthenticationToken(
-                principal, credentials, type, mobile);
+
+
         // Allow subclasses to set the "details" property
         setDetails(request, authRequest);
         return this.getAuthenticationManager().authenticate(authRequest);
@@ -99,6 +102,7 @@ public class MyLoginAuthenticationFilter extends AbstractAuthenticationProcessin
     }
 
     private String obtainParameter(HttpServletRequest request, String parameter) {
-        return request.getParameter(parameter);
+        String result =  request.getParameter(parameter);
+        return result == null ? "" : result;
     }
 }

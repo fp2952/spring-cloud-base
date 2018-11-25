@@ -8,15 +8,12 @@ import java.util.Collection;
 /**
  * Created by fp295 on 2018/6/16.
  * 自定义AbstractAuthenticationToken，
- * 新增属性 type: 登陆类型、mobile：移动端设备id
  */
 public class MyAuthenticationToken extends AbstractAuthenticationToken {
 
     private static final long serialVersionUID = 110L;
-    private final Object principal;
-    private Object credentials;
-    private String type;
-    private String mobile;
+    protected final Object principal;
+    protected Object credentials;
 
     /**
      * This constructor can be safely used by any code that wishes to create a
@@ -24,12 +21,10 @@ public class MyAuthenticationToken extends AbstractAuthenticationToken {
      * #isAuthenticated()} will return <code>false</code>.
      *
      */
-    public MyAuthenticationToken(Object principal, Object credentials,String type, String mobile) {
+    public MyAuthenticationToken(Object principal, Object credentials) {
         super(null);
         this.principal = principal;
         this.credentials = credentials;
-        this.type = type;
-        this.mobile = mobile;
         this.setAuthenticated(false);
     }
 
@@ -42,12 +37,10 @@ public class MyAuthenticationToken extends AbstractAuthenticationToken {
      * @param credentials
      * @param authorities
      */
-    public MyAuthenticationToken(Object principal, Object credentials,String type, String mobile, Collection<? extends GrantedAuthority> authorities) {
+    public MyAuthenticationToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         this.credentials = credentials;
-        this.type = type;
-        this.mobile = mobile;
         super.setAuthenticated(true);
     }
 
@@ -62,13 +55,6 @@ public class MyAuthenticationToken extends AbstractAuthenticationToken {
         return this.principal;
     }
 
-    public String getType() {
-        return this.type;
-    }
-
-    public String getMobile() {
-        return this.mobile;
-    }
 
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
         if(isAuthenticated) {

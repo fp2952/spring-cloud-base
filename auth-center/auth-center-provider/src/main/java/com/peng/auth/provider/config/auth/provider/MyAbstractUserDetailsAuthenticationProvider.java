@@ -1,6 +1,5 @@
 package com.peng.auth.provider.config.auth.provider;
 
-import com.peng.auth.provider.config.auth.token.MyAuthenticationToken;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -35,10 +34,8 @@ public abstract class MyAbstractUserDetailsAuthenticationProvider implements Aut
     private UserDetailsChecker postAuthenticationChecks = new MyAbstractUserDetailsAuthenticationProvider.DefaultPostAuthenticationChecks();
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
-    public MyAbstractUserDetailsAuthenticationProvider() {
-    }
 
-    protected abstract void additionalAuthenticationChecks(UserDetails var1, MyAuthenticationToken var2) throws AuthenticationException;
+    protected abstract void additionalAuthenticationChecks(UserDetails var1, Authentication var2) throws AuthenticationException;
 
     public final void afterPropertiesSet() throws Exception {
         Assert.notNull(this.userCache, "A user cache must be set");
@@ -47,8 +44,6 @@ public abstract class MyAbstractUserDetailsAuthenticationProvider implements Aut
     }
 
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        // 此处修改断言自定义的 MyAuthenticationToken
-        Assert.isInstanceOf(MyAuthenticationToken.class, authentication, this.messages.getMessage("MyAbstractUserDetailsAuthenticationProvider.onlySupports", "Only MyAuthenticationToken is supported"));
         String username = authentication.getPrincipal() == null?"NONE_PROVIDED":authentication.getName();
         boolean cacheWasUsed = true;
         UserDetails user = this.userCache.getUserFromCache(username);
@@ -56,7 +51,7 @@ public abstract class MyAbstractUserDetailsAuthenticationProvider implements Aut
             cacheWasUsed = false;
 
             try {
-                user = this.retrieveUser(username, (MyAuthenticationToken)authentication);
+                user = this.retrieveUser(username, authentication);
             } catch (UsernameNotFoundException var6) {
                 this.logger.debug("User \'" + username + "\' not found");
                 if(this.hideUserNotFoundExceptions) {
@@ -71,16 +66,16 @@ public abstract class MyAbstractUserDetailsAuthenticationProvider implements Aut
 
         try {
             this.preAuthenticationChecks.check(user);
-            this.additionalAuthenticationChecks(user, (MyAuthenticationToken)authentication);
+            this.additionalAuthenticationChecks(user, authentication);
         } catch (AuthenticationException var7) {
             if(!cacheWasUsed) {
                 throw var7;
             }
 
             cacheWasUsed = false;
-            user = this.retrieveUser(username, (MyAuthenticationToken)authentication);
+            user = this.retrieveUser(username, authentication);
             this.preAuthenticationChecks.check(user);
-            this.additionalAuthenticationChecks(user, (MyAuthenticationToken)authentication);
+            this.additionalAuthenticationChecks(user, authentication);
         }
 
         this.postAuthenticationChecks.check(user);
@@ -96,11 +91,7 @@ public abstract class MyAbstractUserDetailsAuthenticationProvider implements Aut
         return this.createSuccessAuthentication(principalToReturn, authentication, user);
     }
 
-    protected Authentication createSuccessAuthentication(Object principal, Authentication authentication, UserDetails user) {
-        MyAuthenticationToken result = new MyAuthenticationToken(principal, authentication.getCredentials(),((MyAuthenticationToken) authentication).getType(),((MyAuthenticationToken) authentication).getMobile(), this.authoritiesMapper.mapAuthorities(user.getAuthorities()));
-        result.setDetails(authentication.getDetails());
-        return result;
-    }
+    protected abstract Authentication createSuccessAuthentication(Object principal, Authentication authentication, UserDetails user);
 
     protected void doAfterPropertiesSet() throws Exception {
     }
@@ -117,7 +108,7 @@ public abstract class MyAbstractUserDetailsAuthenticationProvider implements Aut
         return this.hideUserNotFoundExceptions;
     }
 
-    protected abstract UserDetails retrieveUser(String var1, MyAuthenticationToken var2) throws AuthenticationException;
+    protected abstract UserDetails retrieveUser(String var1, Authentication var2) throws AuthenticationException;
 
     public void setForcePrincipalAsString(boolean forcePrincipalAsString) {
         this.forcePrincipalAsString = forcePrincipalAsString;
@@ -135,9 +126,6 @@ public abstract class MyAbstractUserDetailsAuthenticationProvider implements Aut
         this.userCache = userCache;
     }
 
-    public boolean supports(Class<?> authentication) {
-        return MyAuthenticationToken.class.isAssignableFrom(authentication);
-    }
 
     protected UserDetailsChecker getPreAuthenticationChecks() {
         return this.preAuthenticationChecks;

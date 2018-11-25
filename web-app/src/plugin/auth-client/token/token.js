@@ -10,12 +10,35 @@ export default {
    * 请求授权服务器获取token
    * @param code
    */
-  accessoken (code) {
+  accestokenByCode (code) {
     axios.post(Config.authUrl + '/oauth/token', {
       grant_type: 'authorization_code',
       code: code,
       client: Config.appId,
       redirect_uri: Config.baseUrl
+    }, {
+      transformRequest: [function (data) {
+        return querystring.stringify(data)
+      }],
+      auth: {
+        username: Config.appId,
+        password: Config.appSecret
+      }
+    })
+      .then(res => {
+        this.saveToken(res.data)
+        window.location.href = Config.baseUrl
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  },
+
+  accestokenByBasic (username, password) {
+    axios.post(Config.authUrl + '/oauth/token', {
+      grant_type: 'password',
+      username: username,
+      password: password
     }, {
       transformRequest: [function (data) {
         return querystring.stringify(data)
@@ -61,6 +84,8 @@ export default {
         })
         .catch(err => {
           console.error(err)
+          window.location.href = Config.authUrl + '/oauth/authorize?response_type=code&client_id=' + Config.appId + '&redirect_uri=' +
+            Config.baseUrl
         })
     }
   },

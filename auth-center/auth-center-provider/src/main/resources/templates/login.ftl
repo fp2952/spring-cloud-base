@@ -63,7 +63,6 @@
                     <div class="ui left icon input">
                         <i class="user icon"></i>
                         <input id="username" name="username" placeholder="用户名" value="test">
-                        <input type="text" name="type" value="user" hidden>
                     </div>
                 </div>
                 <div class="field item" style="height: 80px">
@@ -79,14 +78,13 @@
             <div class="ui error message"></div>
         </form>
 
-        <form id="form1" class="ui large form transition hidden" action="login" method="post" style="border: 0;">
+        <form id="form1" class="ui large form transition hidden" action="phoneLogin" method="post" style="border: 0;">
             <div class="ui stacked segment">
                 <h3 class="title"> 授权中心 </h3>
                 <div class="field item">
                     <div class="ui left icon input">
                         <i class="mobile icon"></i>
                         <input id="phone" name="phone" placeholder="手机号码" value="13100000000">
-                        <input type="text" name="type" value="phone" hidden>
                     </div>
                 </div>
                 <div class="field item" style="height: 80px">

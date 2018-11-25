@@ -1,15 +1,20 @@
 package com.peng.auth.provider.config.auth;
 
 
-import com.peng.auth.provider.config.auth.filter.MyLoginAuthenticationFilter;
+import com.peng.auth.provider.config.auth.filter.PhoneLoginAuthenticationFilter;
+import com.peng.auth.provider.config.auth.filter.QrLoginAuthenticationFilter;
 import com.peng.auth.provider.config.auth.handler.MyLoginAuthSuccessHandler;
-import com.peng.auth.provider.config.auth.provider.MyAuthenticationProvider;
-import com.peng.auth.provider.service.BaseUserDetailService;
+import com.peng.auth.provider.config.auth.provider.PhoneAuthenticationProvider;
+import com.peng.auth.provider.config.auth.provider.QrAuthenticationProvider;
+import com.peng.auth.provider.service.PhoneUserDetailService;
+import com.peng.auth.provider.service.QrUserDetailService;
+import com.peng.auth.provider.service.UsernameUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,12 +31,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // 自动注入UserDetailsService
     @Autowired
-    private BaseUserDetailService baseUserDetailService;
+    private UsernameUserDetailService usernameUserDetailService;
+
+    @Autowired
+    private PhoneUserDetailService phoneUserDetailService;
+
+    @Autowired
+    private QrUserDetailService qrUserDetailService;
+
+
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                .addFilterAt(getMyLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                //.addFilterAt(getMyLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(getPhoneLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(getQrLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 // 配置登陆页/login并允许访问
                 .formLogin().loginPage("/login").permitAll()
                 // 登出页
@@ -48,44 +69,70 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(myAuthenticationProvider());
+        auth.authenticationProvider(phoneAuthenticationProvider());
+        auth.authenticationProvider(daoAuthenticationProvider());
+        auth.authenticationProvider(qrAuthenticationProvider());
     }
 
-    /*@Bean
+    @Bean
+    public BCryptPasswordEncoder myEncoder(){
+        return new BCryptPasswordEncoder(6);
+    }
+
+    @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(){
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider provider1 = new DaoAuthenticationProvider();
         // 设置userDetailsService
-        provider.setUserDetailsService(baseUserDetailService);
+        provider1.setUserDetailsService(usernameUserDetailService);
         // 禁止隐藏用户未找到异常
-        provider.setHideUserNotFoundExceptions(false);
+        provider1.setHideUserNotFoundExceptions(false);
         // 使用BCrypt进行密码的hash
-        provider.setPasswordEncoder(new BCryptPasswordEncoder(6));
-        return provider;
-    }*/
+        provider1.setPasswordEncoder(myEncoder());
+        return provider1;
+    }
 
-    /**
-     * 自定义密码验证
-     * @return
-     */
+
     @Bean
-    public MyAuthenticationProvider myAuthenticationProvider(){
-        MyAuthenticationProvider provider = new MyAuthenticationProvider();
+    public PhoneAuthenticationProvider phoneAuthenticationProvider(){
+        PhoneAuthenticationProvider provider = new PhoneAuthenticationProvider();
         // 设置userDetailsService
-        provider.setUserDetailsService(baseUserDetailService);
+        provider.setUserDetailsService(phoneUserDetailService);
         // 禁止隐藏用户未找到异常
         provider.setHideUserNotFoundExceptions(false);
-        // 使用BCrypt进行密码的hash
-        provider.setPasswordEncoder(new BCryptPasswordEncoder(6));
         return provider;
     }
 
+    @Bean
+    public QrAuthenticationProvider qrAuthenticationProvider(){
+        QrAuthenticationProvider provider = new QrAuthenticationProvider();
+        // 设置userDetailsService
+        provider.setUserDetailsService(qrUserDetailService);
+        // 禁止隐藏用户未找到异常
+        provider.setHideUserNotFoundExceptions(false);
+        return provider;
+    }
+
+
     /**
-     * 自定义登陆过滤器
+     * 手机验证码登陆过滤器
      * @return
      */
     @Bean
-    public MyLoginAuthenticationFilter getMyLoginAuthenticationFilter() {
-        MyLoginAuthenticationFilter filter = new MyLoginAuthenticationFilter();
+    public PhoneLoginAuthenticationFilter getPhoneLoginAuthenticationFilter() {
+        PhoneLoginAuthenticationFilter filter = new PhoneLoginAuthenticationFilter();
+        try {
+            filter.setAuthenticationManager(this.authenticationManagerBean());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        filter.setAuthenticationSuccessHandler(new MyLoginAuthSuccessHandler());
+        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"));
+        return filter;
+    }
+
+    @Bean
+    public QrLoginAuthenticationFilter getQrLoginAuthenticationFilter() {
+        QrLoginAuthenticationFilter filter = new QrLoginAuthenticationFilter();
         try {
             filter.setAuthenticationManager(this.authenticationManagerBean());
         } catch (Exception e) {

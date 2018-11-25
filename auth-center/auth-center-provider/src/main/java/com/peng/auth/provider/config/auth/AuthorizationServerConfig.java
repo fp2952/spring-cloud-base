@@ -4,6 +4,7 @@ package com.peng.auth.provider.config.auth;
 import com.peng.auth.api.token.JwtAccessToken;
 import com.peng.auth.provider.service.BaseUserDetailService;
 
+import com.peng.auth.provider.service.UsernameUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -42,7 +43,7 @@ import javax.sql.DataSource;
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
-    private BaseUserDetailService userDetailsService;
+    private UsernameUserDetailService userDetailsService;
 
     @Autowired
     private AuthenticationManager authenticationManager;

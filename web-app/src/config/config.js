@@ -10,6 +10,7 @@ export default {
     // 配置 OAuth2.0
     Vue.prototype.$auth.config.appId = 'test'
     Vue.prototype.$auth.config.appSecret = 'test'
+    // Vue.prototype.$auth.config.grant_type = 'password'
 
     // 设置后台请求地址前缀
     // Vue.axios.defaults.baseURL = process.env.SERVER_URL
