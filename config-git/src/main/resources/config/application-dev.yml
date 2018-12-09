@@ -16,3 +16,16 @@ endpoints:
     enabled: true
   shutdown:
     enabled: false
+
+# ribbon 超时时间
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+
+# 关闭熔断器超时检测时间功能， 生产环境不建议关闭
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
